@@ -17,25 +17,28 @@ var db = firebase.database();
 $(document).ready(function() {
 
     /* global firebase */
-    displayGroupMembers("First group");
+    displayGroupMembers(0);
+    displayGroupMembers(1);
 });
 
-function displayGroupMembers(groupName) {
+function displayGroupMembers(groupId) {
 
     var group = db.ref("groups/0/followers");
-    console.log("start: displaying " + groupName)
-    db.ref("groups/0/followers").on("value", function(snapshot) {
-        console.log("Followers:" + snapshot.val());
+    console.log("start displaying " + groupId)
+    db.ref("groups/" + groupId + "/followers").on("child_added", function(snapshot1) {
+        console.log("Followers:" + snapshot1.val());
+
+        db.ref("users/")
+            .orderByChild("uniqueId")
+            .equalTo(snapshot1.val())
+            .on("child_added", function(snapshot) {
+                $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
+            });
     });
     //.equalTo("123").
-    db.ref("users/").orderByChild("uniqieId").equalTo("123").on("child_added", function(snapshot) {
-        console.log("23:" + snapshot.key);
-    });
 
-    group.on("child_added", function(snapshot) {
-        console.log(snapshot);
-        $("#member-list").append($("<li class='collection-item'>").text(snapshot.val()));
-    });
+
+
     //do not touch please
     //var member = $("<li class='collection-item'>").text(name);
 }
