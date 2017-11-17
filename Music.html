@@ -12,7 +12,6 @@
 <body>
 
     <button class="btn-floating btn-large waves-effect waves-light right" id="play-music"><i class="material-icons">play_circle_outline</i></button>
-    <button class="btn-floating btn-large waves-effect waves-light right" id="pause-music"><i class="material-icons">pause_circle_outline</i></button>
     <div id="player" style="visibility:hidden"></div>
 
     <script>
@@ -40,12 +39,15 @@
         }
 
         $("#play-music").click(function() {
-            player.playVideo();
-            $("#play-music").addClass("pulse");
-        });
-        $("#pause-music").click(function() {
-            player.pauseVideo();
-            $("#play-music").removeClass("pulse");
+            if (player.getPlayerState() !== 1) {
+                player.playVideo();
+                $("#play-music").addClass("pulse");
+
+            }
+            else {
+                player.pauseVideo();
+                $("#play-music").removeClass("pulse");
+            }
         });
     </script>
 </body>
