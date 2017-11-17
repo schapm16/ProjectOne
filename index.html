@@ -20,9 +20,14 @@
 </head>
 
 <body>
-    <!--<button class="btn btn-warning btn-xs theme-button"><span class="glyphicon glyphicon-music"></span> Terrible Music!</button>-->
-    <!--<button class="btn btn-default btn-xs pause-button"><span class="glyphicon glyphicon-pause"></span> Pause Song</button>-->
 
+    <nav>
+        <div class="nav-wrapper cyan darken-3">
+          <a href="#" class="brand-logo center">Logo</a>
+        </div>
+    </nav>
+    
+    
     <div class="container">
         
       <form>
@@ -54,8 +59,6 @@
             
         </div>
         
-       
-          
         <div class="row">
             <div class="col s4 offset-s2">
               <div class="input-field">
@@ -78,21 +81,34 @@
         
       </form>
       
+      
     </div>
         
         
-    <div id="modal1" class="modal">
+    <div id="registerModal" class="modal">
       <div class="modal-content">
-        <h4>Modal Header</h4>
-        <p>A bunch of text</p>
+        <h5>Register an account.</h5>
+        <div class="input-field">
+          <input id="registerEmail" type="email" class="validate">
+          <label for="registerEmail">Email</label>
+        </div>
+        
+        <div class="input-field">
+          <input id="registerPassword" type="password" class="validate">
+          <label for="registerPassword">password</label>
+        </div>
+        
       </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+      
+      <div class="modal-footer">
+        <button id="registerButton" type="button" class="btn">Register</button>
+      </div>
+      
     </div>
-    
-  </div>
-    <!--TODO: Link Me-->
-    <script src="assets/javascript/script.js"></script>
+  
+  
+  <script src="assets/javascript/indexScript.js"></script>
+  
 </body>
 
 </html>
