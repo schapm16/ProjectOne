@@ -43,7 +43,7 @@
 		firebase.initializeApp(config);
 
 		///////////////////////////////////////////////////////////////////////// working on creating an object
-
+		let auth;
 		//////////////////////////////////////////////////////////////////////// test authentication snippets
 		const loginBtn = document.getElementById('login-btn');
 
@@ -51,18 +51,45 @@
 			e.preventDefault();
 			try {
 				const email = $('#user-name').val(),
-					password = $('#user-password').val();
+					password = $('#user-password').val(),
+					alias = $('#user-alias').val();
 
-				firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-					// Handle Errors here.
-					var errorCode = error.code;
-					var errorMessage = error.message;
-					// ...
-				});
-			} catch(err) {
+				firebase.auth().createUserWithEmailAndPassword(email, password)
+					.then(function(user) {
+						//now user is needed to be logged in to save data
+						console.log("Authenticated successfully with payload:", user);
+						auth = user;
+						console.log(auth);
+						console.log("Successfully created user account with uid:", user.uid);
+
+						firebase.database().ref('/aliases').push(alias);
+						
+						//now saving the profile data
+						usersRef
+							.child(user.uid)
+							.set(data)
+							.then(function() {
+								console.log("User Information Saved:", user.uid);
+							});
+
+
+					}).catch(function(error) {
+						// Handle Errors here.
+						var errorCode = error.code;
+						var errorMessage = error.message;
+						// ...
+					});
+			} catch (err) {
 				console.log(err.message);
 			}
 		});
+
+
+
+
+
+
+
 
 
 
