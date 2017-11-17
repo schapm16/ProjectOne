@@ -2,78 +2,82 @@
 <html lang="en-us">
 
 <head>
-  
-    <meta charset="UTF-8">
-    <title>Secret Santa Dashboard</title>
-    
-    <!-- JQuery link -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    
-    <!-- Materialize CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-    <!--------------------->
-    
-    <!-- Manual Styling -->
-    <link rel="stylesheet" href="assets/css/indexStyle.css" type="text/css" />
-    
+  <meta charset="UTF-8">
+  <title>Secret Santa Dashboard</title>
+
+  <!-- JQuery link -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Materialize CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <!--------------------->
+
+  <!-- Manual Styling -->
+  <link rel="stylesheet" href="assets/css/indexStyle.css" type="text/css" />
+
 </head>
 
 <body>
-    <!--<button class="btn btn-warning btn-xs theme-button"><span class="glyphicon glyphicon-music"></span> Terrible Music!</button>-->
-    <!--<button class="btn btn-default btn-xs pause-button"><span class="glyphicon glyphicon-pause"></span> Pause Song</button>-->
+  <!--<button class="btn btn-warning btn-xs theme-button"><span class="glyphicon glyphicon-music"></span> Terrible Music!</button>-->
+  <!--<button class="btn btn-default btn-xs pause-button"><span class="glyphicon glyphicon-pause"></span> Pause Song</button>-->
 
-    <div class="container">
-        
-      <form>
-      
-        <div class="row">
-          <div class="col s4 offset-s4">
-            <div class="input-field">
-              <input id="loginNewGroup" type="text" class="validate">
-              <label for="loginNewGroup">Create New Group</label>
-            </div>
+  <div class="container">
+
+    <form>
+
+      <div class="row">
+        <div class="col s4 offset-s4">
+          <div class="input-field">
+            <input id="loginNewGroup" type="text" class="validate">
+            <label for="loginNewGroup">Create New Group</label>
           </div>
         </div>
-          
-          
-        <div class="row">
-          <div class="col s4 offset-s4">
-            <div class="input-field">
-              <input id="loginJoinGroup" type="text" class="validate">
-              <label for="loginJoinGroup">Join Existing Group</label>
-            </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col s4 offset-s4">
+          <div class="input-field">
+            <input id="loginJoinGroup" type="text" class="validate">
+            <label for="loginJoinGroup">Join Existing Group</label>
           </div>
         </div>
-          
-        <div class="row">
-            <div class="col s4 offset-s2">
-              <div class="input-field">
-                <input id="loginEmail" type="email" class="validate">
-                <label for="loginEmail">Email</label>
-              </div>
-            </div>
-            
-            <div class="col s4">
-              <div class="input-field">
-                <input id="loginPassword" type="password" class="validate">
-                <label for="loginPassword">password</label>
-              </div>
-            </div>
-            
-            <div class="col s1">
-              <div class="input-field">
-                <button id="loginButton" type="button" class="btn">Next</button>
-              </div>
-            </div>
+      </div>
+
+      <div class="row">
+        <div class="col s4 offset-s2">
+          <div class="input-field">
+            <input id="loginEmail" type="email" class="validate">
+            <label for="loginEmail">Email</label>
+          </div>
         </div>
-        
-      </form>
-      
+
+        <div class="col s4">
+          <div class="input-field">
+            <input id="loginPassword" type="password" class="validate">
+            <label for="loginPassword">password</label>
+          </div>
+        </div>
+
+        <div class="col s1">
+          <div class="input-field">
+            <button id="loginButton" type="button" class="btn">Next</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+    <div data-video="VIDEO_ID" data-autoplay="0" data-loop="1" id="youtube-audio">
     </div>
-        
-    <!--TODO: Link Me-->
-    <script src="assets/javascript/script.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://cdn.rawgit.com/labnol/files/master/yt.js"></script>
+
+  </div>
+
+  <!--TODO: Link Me-->
+  <script src="assets/javascript/script.js"></script>
+
 </body>
 
 </html>
