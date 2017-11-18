@@ -73,10 +73,9 @@
 						auth = user;
 						console.log("Successfully created user account with uid:", user.uid);
 
-						firebase.database().ref('/aliases').push(alias);
-
 						//now saving the profile data
-						//Adding works fine now
+						//saving works fine now, if we want to add additional fields to user's database profile - we can add
+						//new property to the object in .set field
 						firebase.database().ref('/users/' + user.uid)
 							.set({
 								Name: alias,
@@ -85,6 +84,9 @@
 							.then(function() {
 								console.log("User Information Saved:", user.uid);
 							});
+						//temporary adding all new users to the 1 group.
+						firebase.database().ref('/groups/' + 0 + "/followers/").push(user.uid);
+
 
 						console.log(userRef);
 
