@@ -40,35 +40,45 @@
 			messagingSenderId: "889146133810"
 		};
 
-		firebase.initializeApp(config);
+		// create a list of authentication provider
+		let provider = new firebase.auth.GoogleAuthProvider();
+
+
+		firebase.initializeApp(config, "yssl");
+		const yssL = firebase.app("yssl"),
+			ssAppRef = firebase.auth(yssL);
 
 		///////////////////////////////////////////////////////////////////////// working on creating an object
 		let auth, userRef;
 		//////////////////////////////////////////////////////////////////////// test authentication snippets
 		const loginBtn = document.getElementById('login-btn'),
-			signupBtn =document.getElementById('signupBtn');
+			signupBtn = document.getElementById('signup-btn');
 
-		signupBtn.addEventListener('click', (e) => {
+
+		// registering account with our app
+		signupBtn.onclick = (e) => {
 			e.preventDefault();
 			try {
-				const email = $('#user-name').val(),
+				const email = $('#user-email').val(),
 					password = $('#user-password').val(),
 					alias = $('#user-alias').val();
 
-				firebase.auth().createUserWithEmailAndPassword(email, password)
+				ssAppRef.createUserWithEmailAndPassword(email, password)
 					.then(function(user) {
-						//now user is needed to be logged in to save data
+
+						sendEmailVerification(user);
+
 						console.log("Authenticated successfully with payload:", user);
+
 						auth = user;
-						console.log(auth);
 						console.log("Successfully created user account with uid:", user.uid);
 
 						firebase.database().ref('/aliases').push(alias);
-						
+
 						//now saving the profile data
-						firebase.datbase.ref('/user-login')
+						firebase.datbase.ref('/users/' + user.uid)
 							.child(user.uid)
-							.set(data)
+							.set(user)
 							.then(function() {
 								console.log("User Information Saved:", user.uid);
 							});
@@ -85,16 +95,50 @@
 			} catch (err) {
 				console.log(err.message);
 			}
-		});
+		};
+
+
+		loginBtn.onclick = (e) => {
+			e.preventDefault();
+
+			try {
+				const email = $('#user-email').val(),
+					password = $('#user-password').val(),
+					alias = $('#user-alias').val();
+
+				ssAppRef.signInWithEmailAndPassword(email, password)
+					.then(function(user) {
+						//now user is needed to be logged in to save data
+						console.log("User successfully signed in with payload:", user);
+
+					}).catch(function(error) {
+						// Handle Errors here.
+						var errorCode = error.code;
+						var errorMessage = error.message;
+						// ...
+					});
+			} catch (err) {
+				console.log(err.message);
+			}
+
+
+		}
+
+ 		function sendEmailVerification(user) {
+			// [START sendemailverification]
+			ssAppRef.currentUser.sendEmailVerification().then(function() {
+				// Email Verification sent!
+				// [START_EXCLUDE]
+				alert('Email Verification Sent!');
+				// [END_EXCLUDE]
+			});
+			// [END sendemailverification]
+		}
 
 
 
 
-
-
-
-
-
+ 
 
 
 
