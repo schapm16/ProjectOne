@@ -6,7 +6,7 @@ $(document).ready(function(){
   $('.modal').modal();
   
   
-  $("#loginButton").click(function() {
+  $("#startRegisterButton").click(function() {
   
     var joinGroupName = $("#loginJoinGroup").val();
     var createGroupName = $("#loginCreateGroup").val();
@@ -14,9 +14,9 @@ $(document).ready(function(){
     var userEmail = $("#loginEmail").val();
     var userPassword = $("#loginPassword").val();
     
-    if (userEmail === "" || userPassword === "") {
-      $("#registerModal").modal("open");
-    }
+    
+    $("#registerModal").modal("open");
+    
     
     });
   });
