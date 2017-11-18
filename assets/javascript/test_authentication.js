@@ -125,7 +125,8 @@
 						console.log(error.message);
 						// ...
 					});
-			} catch (err) {
+			}
+			catch (err) {
 				console.log(err.message);
 			}
 
