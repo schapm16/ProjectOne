@@ -66,7 +66,7 @@
 				ssAppRef.createUserWithEmailAndPassword(email, password)
 					.then(function(user) {
 
-						sendEmailVerification(user);
+						//sendEmailVerification(user);
 
 						console.log("Authenticated successfully with payload:", user);
 
@@ -76,9 +76,12 @@
 						firebase.database().ref('/aliases').push(alias);
 
 						//now saving the profile data
-						firebase.datbase.ref('/users/' + user.uid)
-							.child(user.uid)
-							.set(user)
+						//Adding works fine now
+						firebase.database().ref('/users/' + user.uid)
+							.set({
+								Name: alias,
+								uniqueId: user.uid
+							})
 							.then(function() {
 								console.log("User Information Saved:", user.uid);
 							});
@@ -90,7 +93,7 @@
 						// Handle Errors here.
 						var errorCode = error.code;
 						var errorMessage = error.message;
-						alert(error.message);
+						console.log("Error: " + error.message);
 						// ...
 					});
 			}
@@ -114,7 +117,7 @@
 
 						if (user.uid) {
 							console.log('User signed in.', user.uid);
-							//window.location.replace('/index.html');
+							window.location.replace('/index.html');
 						}
 						else {
 							alert('failed attempt');
