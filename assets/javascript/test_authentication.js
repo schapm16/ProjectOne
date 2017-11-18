@@ -123,6 +123,7 @@
 						var errorCode = error.code;
 						var errorMessage = error.message;
 						console.log(error.message);
+						window.location.replace('/test_index.html#');
 						// ...
 					});
 			} catch (err) {
