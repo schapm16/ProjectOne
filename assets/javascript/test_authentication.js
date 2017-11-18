@@ -63,7 +63,7 @@
 						console.log("Successfully created user account with uid:", user.uid);
 
 						firebase.database().ref('/aliases').push(alias);
-						
+
 						//now saving the profile data
 						usersRef
 							.child(user.uid)
@@ -79,7 +79,8 @@
 						var errorMessage = error.message;
 						// ...
 					});
-			} catch (err) {
+			}
+			catch (err) {
 				console.log(err.message);
 			}
 		});
