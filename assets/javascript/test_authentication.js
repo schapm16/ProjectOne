@@ -93,7 +93,8 @@
 						alert(error.message);
 						// ...
 					});
-			} catch (err) {
+			}
+			catch (err) {
 				console.log(err.message);
 			}
 		};
@@ -113,8 +114,9 @@
 
 						if (user.uid) {
 							console.log('User signed in.', user.uid);
-							window.location.replace('/index.html');
-						} else {
+							//window.location.replace('/index.html');
+						}
+						else {
 							alert('failed attempt');
 						}
 
