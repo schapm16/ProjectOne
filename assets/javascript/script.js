@@ -2,12 +2,12 @@ console.log("main script.js connected")
 
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyC0eSKT_b9dNLmeNGJmBvy5XNtmHoQ1jQY",
-    authDomain: "team-project1.firebaseapp.com",
-    databaseURL: "https://team-project1.firebaseio.com",
-    projectId: "team-project1",
-    storageBucket: "team-project1.appspot.com",
-    messagingSenderId: "724719626718"
+    apiKey: "AIzaSyDcO3BpfmGShgWNYjE-b-Wax18ZudRS9fk",
+    authDomain: "secret-santa-project.firebaseapp.com",
+    databaseURL: "https://secret-santa-project.firebaseio.com",
+    projectId: "secret-santa-project",
+    storageBucket: "secret-santa-project.appspot.com",
+    messagingSenderId: "889146133810"
 };
 /* global firebase */
 firebase.initializeApp(config);
