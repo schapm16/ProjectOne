@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>Test login</title>
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-messaging.js"></script>
+	<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+
+	body {
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+	}
+
+	form {
+		width: 100%;
+		max-width: 480px;
+	}
+
+	ul {
+		padding: 0px;
+	}
+
+	label {
+		display: inline-block;
+		margin-top: .5rem;
+		line-height: 2;
+	}
+
+	input {
+		width: 100%;
+		height: 1.25rem;
+	}
+
+	input[type="submit"] {
+		margin-top: 2rem;
+	}
+	</style>
+</head>
+
+<body>
+	<form action="#">
+		<ul>
+			<label for="user-name">User Email:</label>
+			<input type="email" name="user_name" id="user-email">
+			<label for="user-password">Password</label>
+			<input type="password" name="user_password" id="user-password">
+			<label for="user-password">Alias</label>
+			<input type="text" name="user_alias" id="user-alias">
+		</ul>
+		<input type="submit" value="Signup" id="signup-btn">
+		<input type="submit" value="Login" id="login-btn">
+	</form>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="assets/javascript/test_authentication.js"></script>
+	<!-- <script src="assets/javascript/test_authentication_google.js"></script> -->
+</body>
+
+</html>
