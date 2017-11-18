@@ -43,11 +43,12 @@
 		firebase.initializeApp(config);
 
 		///////////////////////////////////////////////////////////////////////// working on creating an object
-		let auth;
+		let auth, userRef;
 		//////////////////////////////////////////////////////////////////////// test authentication snippets
-		const loginBtn = document.getElementById('login-btn');
+		const loginBtn = document.getElementById('login-btn'),
+			signupBtn =document.getElementById('signupBtn');
 
-		loginBtn.addEventListener('click', (e) => {
+		signupBtn.addEventListener('click', (e) => {
 			e.preventDefault();
 			try {
 				const email = $('#user-name').val(),
@@ -65,12 +66,14 @@
 						firebase.database().ref('/aliases').push(alias);
 						
 						//now saving the profile data
-						usersRef
+						firebase.datbase.ref('/user-login')
 							.child(user.uid)
 							.set(data)
 							.then(function() {
 								console.log("User Information Saved:", user.uid);
 							});
+
+						console.log(userRef);
 
 
 					}).catch(function(error) {
