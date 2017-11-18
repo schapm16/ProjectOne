@@ -23,7 +23,7 @@ $(document).ready(function() {
 
 function displayGroupMembers(groupId) {
 
-    var group = db.ref("groups/0/followers");
+    $("#group-" + groupId + " > h3").text("Group " + groupId);
     console.log("start displaying " + groupId)
     db.ref("groups/" + groupId + "/followers").on("child_added", function(snapshot1) {
         console.log("Followers:" + snapshot1.val());
