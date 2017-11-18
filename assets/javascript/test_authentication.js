@@ -90,13 +90,13 @@
 						// Handle Errors here.
 						var errorCode = error.code;
 						var errorMessage = error.message;
+						alert(error.message);
 						// ...
 					});
 			} catch (err) {
 				console.log(err.message);
 			}
 		};
-
 
 		loginBtn.onclick = (e) => {
 			e.preventDefault();
@@ -111,10 +111,18 @@
 						//now user is needed to be logged in to save data
 						console.log("User successfully signed in with payload:", user);
 
+						if (user.uid) {
+							console.log('User signed in.', user.uid);
+							window.location.replace('/index.html');
+						} else {
+							alert('failed attempt');
+						}
+
 					}).catch(function(error) {
 						// Handle Errors here.
 						var errorCode = error.code;
 						var errorMessage = error.message;
+						console.log(error.message);
 						// ...
 					});
 			} catch (err) {
@@ -124,7 +132,12 @@
 
 		}
 
- 		function sendEmailVerification(user) {
+
+
+
+
+
+		function sendEmailVerification(user) {
 			// [START sendemailverification]
 			ssAppRef.currentUser.sendEmailVerification().then(function() {
 				// Email Verification sent!
@@ -138,7 +151,7 @@
 
 
 
- 
+
 
 
 
