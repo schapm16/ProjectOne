@@ -1,0 +1,18 @@
+.nav-wrapper {
+    background-image: url("../images/banner3_edit2.jpeg");
+    background-size: cover;
+    background-position: bottom;
+    
+}
+
+img {
+    box-sizing: content-box;
+    
+    max-height: 10vh;
+    width: auto;
+    
+    margin-left: 2vw;
+    
+    border-radius: 20%;
+    border: 2px solid #D32323;
+}
