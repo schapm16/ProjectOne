@@ -35,13 +35,32 @@
 
 		}
 
+		function validateInputValue(email, password, passwordConfirmation = password) {
+			return new Promise(resolve => {
+				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
+					throw new Error('invalid email input');
+					reject();
+				}
+				if (password.length < 8) {
+					throw new Error('password must be at least 8 characters long');
+					reject();
+				}
+				// could add another check for password pattern
+				if (passwordConfirmation !== password) {
+					throw new Error('password unmatch, please confirm your password');
+					reject();
+				}
+				resolve();
+			});
+		}
+
 		function userVerificationStateReload() {
 			return new Promise(resolve => {
 				let reloadInterval = setInterval(function() {
 					ssAppAuth.currentUser.reload();
 					console.log(ssAppAuth.currentUser.emailVerified);
 					console.log('It\'s been awhile I\'m gonna ping them again');
-					
+
 					if (ssAppAuth.currentUser.emailVerified) {
 						console.log('it\'s true then');
 						resolve(reloadInterval);
@@ -50,6 +69,7 @@
 
 				// if no emailVerified state change in 5 min reject and reload the page
 				setTimeout(function() {
+					clearInterval(reloadInterval);
 					throw new Error('No response after 5 min...');
 					reject();
 				}, 30000);
@@ -70,7 +90,6 @@
 			// if validate
 			ssAppAuth.signInWithEmailAndPassword(email, password)
 				.then(function(user) {
-
 					console.log('User signed in.', user.uid);
 
 					pageRedirect('/group.html');
@@ -95,41 +114,37 @@
 
 
 			// here goes input validation
-
-
-			ssAppAuth.createUserWithEmailAndPassword(email, password)
-				.then(function(user) {
+			validateInputValue(email, password, passwordConfirmation).then(() => {
+				ssAppAuth.createUserWithEmailAndPassword(email, password).then(function(user) {
 					ssAppAuth.currentUser.sendEmailVerification().then(function() {
 						alert('Email Verification Sent!');
 
 						ssAppAuth.onAuthStateChanged(function(user) {
 							console.log(user);
-							userVerificationStateReload()
-								.then(function(intervalId) {
-									clearInterval(intervalId);
-									// the group.html is a placeholder page, which we can put a "Email Confirmed !!" 
-									// later into the project
-									pageRedirect('/group.html');
-									console.log('Email Verified!!');
-								}).catch(function(error) {
-									console.log(error.message);
-									window.location.reload();
-								});
+							userVerificationStateReload().then(function(intervalId) {
+								clearInterval(intervalId);
+								// the group.html is a placeholder page, which we can put a "Email Confirmed !!" 
+								// later into the project
+								console.log('Email Verified!!');
+								pageRedirect('/group.html');
+							}).catch(function(error) {
+								console.log(error.message);
+								window.location.reload();
+							});
 						});
 						alert('Please confirm your email address before proceed');
 					})
-
 				}).catch(function(error) {
 					console.log('Error:  ' + error.code + ' ' + error.message);
-
 					// error handling
 					pageRedirect(window.location.href + "#" + error.message);
 					$('input').val('');
 				})
-
+			}).catch((error) => {
+				console.log(error.message);
+			});
 		};
 
-		console.log(ssAppAuth);
 
 
 
