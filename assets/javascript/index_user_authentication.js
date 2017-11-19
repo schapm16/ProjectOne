@@ -35,7 +35,7 @@
 
 		}
 
-		function validateInputValue(email, password, passwordConfirmation = password) {
+		function validateInputValue(email, password, passwordConfirmation = false) {
 			return new Promise(resolve => {
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
 					throw new Error('invalid email input');
@@ -46,7 +46,7 @@
 					reject();
 				}
 				// could add another check for password pattern
-				if (passwordConfirmation !== password) {
+				if (!!passwordConfirmation && passwordConfirmation !== password) {
 					throw new Error('password unmatch, please confirm your password');
 					reject();
 				}
@@ -54,7 +54,7 @@
 			});
 		}
 
-		function userVerificationStateReload() {
+		function emailVerificationStateReload() {
 			return new Promise(resolve => {
 				let reloadInterval = setInterval(function() {
 					ssAppAuth.currentUser.reload();
@@ -121,7 +121,7 @@
 
 						ssAppAuth.onAuthStateChanged(function(user) {
 							console.log(user);
-							userVerificationStateReload().then(function(intervalId) {
+							emailVerificationStateReload().then(function(intervalId) {
 								clearInterval(intervalId);
 								// the group.html is a placeholder page, which we can put a "Email Confirmed !!" 
 								// later into the project
