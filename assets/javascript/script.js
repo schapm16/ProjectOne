@@ -17,12 +17,28 @@ $(document).ready(function() {
 
 function displayGroup(groupName, groudId) {
     var group = $("<div class='group-item' id='group-" + groudId + "'>");
+    var form = $("<form class='input-field scale-transition scale-out' id='emailForm" + groudId + ">");
     group.append($("<h3 class='center'>"));
-    group.append($("<h5>").html("Members: <span>3</span>/<span>8</span>"));
+    group.append($("<h5>").html(" <span id='member-count" + groudId + "'> </span>"));
     group.append($("<ul class='collection' id='member-list" + groudId + "'>"));
     group.append("<a class='waves-effect waves-light btn'><i class='material-icons left'>ac_unit</i>Start</a>");
+    group.append("<a class='waves-effect waves-light btn' id='expandEmail0'><i class='material-icons left'>email</i>Add</a>");
+    form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
+    form.append("<label for='inviteEmail'>Email</label>");
+    form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
+    group.append(form);
     $(".s6").append(group);
 }
+
+// displayGroup("Group One", 0);
+
+
+
+
+//TODO button click event listener
+// $("#expandEmail0").click(function() {
+//     $("#emailForm0").toggleClass("scale-out").toggleClass("scale-in");
+// });
 
 function displayGroupMembers(groupId) {
     $("#group-" + groupId + " > h3").text("Group " + groupId);
