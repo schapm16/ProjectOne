@@ -31,10 +31,24 @@
 			window.location.assign(url);
 		}
 
-		function errorHandler() {
-
+		// errorHandler process the error caught by firebase
+		// and do something about it
+		function errorHandler(errorCode) {
+			switch (errorCode) {
+				case 'auth/email-already-in-use':
+					alert('An account with this email address is already registered.');
+					break;
+				case 'auth/user-not-found':
+					alert('User with this address doesn\'t exist');
+					break;
+				case 'auth/wrong-password':
+					alert('The password does not match the sign in address.');
+					break;
+			}
 		}
 
+		// validateInputValue caught error in account signin and registeration before pinging firebase
+		// and do something about it
 		function validateInputValue(email, password, passwordConfirmation = false) {
 			return new Promise(resolve => {
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
@@ -54,6 +68,10 @@
 			});
 		}
 
+		// this function ping firebase user data with interval of 1 to 5 seconds to capture 
+		// currentUser.emailVerified update after user verified through the email sent to their address
+		// if verified, auto direct user to the main interface
+		// if after 5 min no update, throw and exception and reload the signin page
 		function emailVerificationStateReload() {
 			return new Promise(resolve => {
 				let reloadInterval = setInterval(function() {
@@ -79,7 +97,7 @@
 
 		// sign in with verified email
 		loginBtn.onclick = function(event) {
-			// perhaps instead of using button, a input[type="submit"] might be better
+			// perhaps instead of using button, an input[type="submit"] might be better
 			// because using submit can trigger onclick event when user press enter
 
 			const email = $('#loginEmail').val(),
@@ -88,13 +106,14 @@
 			// here goes input validation 
 
 			// if validate
-			ssAppAuth.signInWithEmailAndPassword(email, password)
-				.then(function(user) {
+			validateInputValue(email, password).then(() => {
+				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					console.log('User signed in.', user.uid);
 
 					pageRedirect('/group.html');
 				}).catch(function(error) {
 					console.log('Error:  ' + error.code + ' ' + error.message);
+					errorHandler(error.code);
 
 					// adding error handling rules
 
@@ -102,6 +121,9 @@
 					pageRedirect(window.location.href + "#" + error.message);
 					$('input').val('');
 				});
+			}).catch((error) => {
+				alert(error.message);
+			})
 		}; //  
 
 
@@ -111,7 +133,6 @@
 				// I add a password confirmation in the modal so that we can prevent user from typo
 				passwordConfirmation = $('#passwordConfirm').val(),
 				alias = $('#registerAlias').val();
-
 
 			// here goes input validation
 			validateInputValue(email, password, passwordConfirmation).then(() => {
@@ -136,16 +157,15 @@
 					})
 				}).catch(function(error) {
 					console.log('Error:  ' + error.code + ' ' + error.message);
+					errorHandler(error.code);
 					// error handling
 					pageRedirect(window.location.href + "#" + error.message);
 					$('input').val('');
 				})
 			}).catch((error) => {
-				console.log(error.message);
+				alert(error.message);
 			});
 		};
-
-
 
 
 
