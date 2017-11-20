@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Secret Santa Groups</title>
+
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+
     <!-- JQuery link -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- Compiled and minified CSS -->
@@ -12,7 +15,7 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-
+    <link rel="stylesheet" href="./assets/css/indexStyle.css" type="text/css" />
 </head>
 
 <body>
@@ -32,20 +35,34 @@
 
         </div>
         <div class="col s6">
-            <h3 class="center">Group One</h3>
-            <h5>Members: <span>3</span>/<span>8</span></h5>
-            <ul class="collection" id="member-list">
-                <li class="collection-item">
-                    <div class="chip">
-                        <img src="images/yuna.jpg" alt=""> Jane Doe
-                    </div>
-                </li>
-                <li class="collection-item">Alvin</li>
-                <li class="collection-item">Alvin</li>
-                <li class="collection-item">Alvin</li>
-            </ul>
-            <a class="waves-effect waves-light btn"><i class="material-icons left">ac_unit
-</i>Start</a>
+            <div class="group-item" id="group-0">
+                <h3 class="center">Group One</h3>
+                <h5>Members: <span>3</span>/<span>8</span></h5>
+                <ul class="collection" id="member-list0">
+                    <li class="collection-item">
+                        <div class="chip">
+                            <img src="images/yuna.jpg" alt=""> Jane Doe
+                        </div>
+                    </li>
+                    <li class="collection-item">Alvin</li>
+                </ul>
+                <a class="waves-effect waves-light btn"><i class="material-icons left">ac_unit</i>Start</a>
+            </div>
+
+            <div class="group-item" id="group-1">
+                <h3 class="center">Group One</h3>
+                <h5>Members: <span>3</span>/<span>8</span></h5>
+                <ul class="collection" id="member-list1">
+                    <li class="collection-item">
+                        <div class="chip">
+                            <img src="images/yuna.jpg" alt=""> Jane Doe
+                        </div>
+                    </li>
+                    <li class="collection-item">Alvin</li>
+                </ul>
+                <a class="waves-effect waves-light btn"><i class="material-icons left">ac_unit</i>Start</a>
+            </div>
+
         </div>
         <div class="col s3">
             <br>
@@ -56,9 +73,7 @@
 
 
         <!--TODO: Link Me-->
-        <!--<script src="assets/javascript/script.js"></script>-->
-        <script type="text/javascript">
-        </script>
+        <script src="assets/javascript/script.js"></script>
     </div>
 </body>
 
