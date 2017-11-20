@@ -1,4 +1,11 @@
-.group-item {
-    display: inline-block;
-    margin: 10px;
+.card {
+    border-radius: 20px;
 }
+.card-content {
+    overflow: auto;
+}
+
+.modal {
+    min-height: 75%;
+}
+
