@@ -1,0 +1,90 @@
+<html lang="en-us">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Secret Santa Dashboard</title>
+
+  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyDcO3BpfmGShgWNYjE-b-Wax18ZudRS9fk",
+      authDomain: "secret-santa-project.firebaseapp.com",
+      databaseURL: "https://secret-santa-project.firebaseio.com",
+      projectId: "secret-santa-project",
+      storageBucket: "secret-santa-project.appspot.com",
+      messagingSenderId: "889146133810"
+    };
+    firebase.initializeApp(config);
+  </script>
+
+
+  <!-- JQuery link -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Materialize CSS -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <!--------------------->
+
+  <!-- Manual Styling -->
+  <link rel="stylesheet" href="assets/css/mainDashboardStyle.css" type="text/css" />
+
+</head>
+
+<body>
+
+  <nav>
+    <div class="nav-wrapper cyan darken-3 valign-wrapper">
+      <img class="brand-logo left" src="assets/images/secretSanta.png" alt="Secret Santa">
+    </div>
+  </nav>
+
+  <div class="row">
+    <div class="col s12">
+      <h4>Welcome, <span class="userName">Alias</span>!</h4>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col s12 l3">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title"> Send gift ideas to your Secret Santa</span>
+
+          <form>
+            <input id="giftIdea" placeholder="Enter Here" type="text">
+            <button id="giftIdeaButton" class="btn btn-floating" type="button"><i class="material-icons">add</i></button>
+          </form>
+
+          <div id="yourGiftIdeas"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col s12 l6">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title"> Buy a gift for: <span class = "partner">Partner</span></h5>
+
+          <div id="partnerGiftIdeas">
+            <div class="chip">Gift 1</div>
+            <div class="chip">Gift 2</div>
+          </div>
+
+          <div id="productDisplay">
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="assets/javascript/mainDashboardScript.js"></script>
+</body>
+
+</html>
