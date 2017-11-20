@@ -1,27 +1,6 @@
 (function() {
 	"use strict";
 
-	// we can create a separate file for this function 
-	// and add link to html pages
-	// save lines in initializing firebase in every javascript files
-	function initializingFireBase() {
-		//initialize firebase
-		const config = {
-			apiKey: "AIzaSyDcO3BpfmGShgWNYjE-b-Wax18ZudRS9fk",
-			authDomain: "secret-santa-project.firebaseapp.com",
-			databaseURL: "https://secret-santa-project.firebaseio.com",
-			projectId: "secret-santa-project",
-			storageBucket: "secret-santa-project.appspot.com",
-			messagingSenderId: "889146133810"
-		};
-
-		firebase.initializeApp(config, "ssl");
-		// const ssl = firebase.app("ssl");
-		// return firebase.auth(ssl);
-		return firebase.app("ssl");
-	}
-
-	// main function handling user authentication
 	(function userAuthentication($) {
 
 		// get buttons
@@ -81,7 +60,7 @@
 			});
 		}
 
-		// this function ping firebase user data with interval of 1 to 5 seconds to capture 
+		// this function pings firebase user data with interval of 1 to 5 seconds to capture 
 		// currentUser.emailVerified update after user verified through the email sent to their address
 		// if verified, auto direct user to the main interface
 		// if after 5 min no update, throw and exception and reload the signin page
@@ -142,6 +121,8 @@
 
 			// input validation
 			validateInputValue(email, password).then(() => {
+				window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
+				console.log(sessionStorage.getItem('userid'));
 				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {

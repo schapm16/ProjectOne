@@ -1,18 +1,7 @@
 console.log("main script.js connected")
 
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyDcO3BpfmGShgWNYjE-b-Wax18ZudRS9fk",
-    authDomain: "secret-santa-project.firebaseapp.com",
-    databaseURL: "https://secret-santa-project.firebaseio.com",
-    projectId: "secret-santa-project",
-    storageBucket: "secret-santa-project.appspot.com",
-    messagingSenderId: "889146133810"
-};
-/* global firebase */
-firebase.initializeApp(config);
-
-var db = firebase.database();
+var ssl = initializingFireBase();
+var db = firebase.database(ssl);
 
 $(document).ready(function() {
 
