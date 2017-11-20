@@ -30,7 +30,7 @@
 
 		// secretsantaAppAuth = firebase.auth(ssl);
 		// secretsantaAppDatabase = firebase.database(ssl);
-		const ssl = initializingFireBase(), 
+		const ssl = initializingFireBase(),
 			ssAppAuth = firebase.auth(ssl),
 			ssAppDatabase = firebase.database(ssl);
 
@@ -50,7 +50,11 @@
 					break;
 				case "auth/wrong-password":
 					alert("The password does not match the sign in address.");
+					break
+				case "auth/network-request-failed":
+					alert("Request timeout.");
 					break;
+					// case ""
 			}
 		}
 
@@ -83,10 +87,17 @@
 		// if after 5 min no update, throw and exception and reload the signin page
 		function emailVerificationStateReload() {
 			return new Promise(resolve => {
+				// stored the current user in cache to make sure that the currentUser doesn't change at time of pinging
+				const userId = ssAppAuth.currentUser.uid;
 				let reloadInterval = setInterval(function() {
 					ssAppAuth.currentUser.reload();
 					console.log(ssAppAuth.currentUser.emailVerified);
 					console.log("It\'s been awhile I\'m gonna ping them again");
+					
+					if (ssAppAuth.currentUser.uid !== userId) {
+						throw new Error("The current user online is unfortunately, not you. The page will reload now.");
+						reject();
+					}
 
 					if (ssAppAuth.currentUser.emailVerified) {
 						console.log("it\'s true then");
@@ -99,7 +110,7 @@
 					clearInterval(reloadInterval);
 					throw new Error("No response after 5 min...");
 					reject();
-				}, 30000);
+				}, 300000);
 			})
 		}
 
