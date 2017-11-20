@@ -30,8 +30,7 @@ function displayGroup(groupName, groudId) {
     $(".s6").append(group);
 }
 
-displayGroup("Group One", 0);
-<h5>Members:</h5>
+// displayGroup("Group One", 0);
 
 
 
