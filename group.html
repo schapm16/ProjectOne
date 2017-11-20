@@ -34,38 +34,50 @@
         <div class="col s6">
             <div class="group-item" id="group-0">
                 <h3 class="center">Group One</h3>
-                <h5>Members: <span>3</span>/<span>8</span></h5>
+                <h5>Members: <span id="member-count0">Test</span></h5>
                 <ul class="collection" id="member-list0">
-                    <li class="collection-item">
-                        <div class="chip">
-                            <img src="images/yuna.jpg" alt=""> Jane Doe
-                        </div>
-                    </li>
                     <li class="collection-item">Alvin</li>
                 </ul>
                 <a class="waves-effect waves-light btn"><i class="material-icons left">ac_unit</i>Start</a>
+
+                <a class="waves-effect waves-light btn" id="expandEmail0"><i class="material-icons left">email</i>AdD</a>
+
+                <form class="input-field scale-transition scale-out" id="emailForm0">
+                    <input id="inviteEmail" type="email" class="validate" style="width:80%">
+                    <label for="inviteEmail">Email</label>
+                    <button id="inviteEmailButton" type="button" class="btn-floating btn-large right"><i class="material-icons">arrow_forward</i></button>
+                </form>
+
             </div>
-            <div class="group-item" id="group-1">
-                <h3 class="center">Group One</h3>
-                <h5>Members: <span>3</span>/<span>8</span></h5>
-                <ul class="collection" id="member-list1">
-                    <li class="collection-item">
-                        <div class="chip">
-                            <img src="images/yuna.jpg" alt=""> Jane Doe
-                        </div>
-                    </li>
-                    <li class="collection-item">Alvin</li>
-                </ul>
-                <a class="waves-effect waves-light btn"><i class="material-icons left">ac_unit</i>Start</a>
-            </div>
+            <!--<div class="group-item">-->
+            <!--    <h3 class="center">Group One</h3>-->
+            <!--    <h5>Members: <span id="member-count1">Test</span></h5>-->
+            <!--    <ul class="collection" id="member-list1">-->
+            <!--        <li class="collection-item">-->
+            <!--            <div class="chip">-->
+            <!--                <img src="images/yuna.jpg" alt=""> Jane Doe-->
+            <!--            </div>-->
+            <!--        </li>-->
+            <!--        <li class="collection-item">Alvin</li>-->
+            <!--    </ul>-->
+            <!--    <a class="waves-effect waves-light btn"><i class="material-icons left">ac_unit</i>Start</a>-->
+            <!--</div>-->
+
         </div>
         <div class="col s3">
-            <br>
-            <button class="btn-floating btn-large waves-effect waves-light right" id="play-music"><i class="material-icons">play_circle_outline</i></button>
-            <button class="btn-floating btn-large waves-effect waves-light right" id="pause-music"><i class="material-icons">pause_circle_outline</i></button>
+            <div style="padding: 20px">
+                <button class="btn-floating btn-large waves-effect waves-light right" id="play-music"><i class="material-icons">play_circle_outline</i></button>
+                <div id="player" style="visibility:hidden"></div>
+            </div>
         </div>
         <!--TODO: Link Me-->
         <script src="assets/javascript/script.js"></script>
+        <script type="text/javascript" src="assets/javascript/music.js"></script>
+        <script>
+            $("#expandEmail0").click(function() {
+                $("#emailForm0").toggleClass("scale-out").toggleClass("scale-in");
+            });
+        </script>
     </div>
 </body>
 
