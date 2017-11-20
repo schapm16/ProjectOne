@@ -90,34 +90,47 @@
 
     <div id="registerModal" class="modal">
       <div class="modal-content">
-        <h5>Register your account.</h5>
-
-        <div class="input-field">
-          <input id="registerAlias" type="text">
-          <label for="registerAlias">Create Alias</label>
+        <div class="row">
+          <h5>Register your account.</h5>
         </div>
         
-         <div class="input-field">
-          <input id="registerName" type="text">
-          <label for="registerName">Name</label>
+        <div class="row">
+          <div id="formLeft" class="col s5">
+            <div class="input-field">
+              <input id="registerAlias" type="text">
+              <label for="registerAlias">Create Alias</label>
+            </div>
+        
+            <div class="input-field">
+              <input id="registerName" type="text">
+              <label for="registerName">Name</label>
+            </div>
+          </div>
+          
+          <div id="formRight" class="col s5 offset-s2">
+            <div class="input-field">
+              <input id="registerEmail" type="email" class="validate">
+              <label for="registerEmail">Email</label>
+            </div>
+    
+            <div class="input-field">
+              <input id="registerPassword" type="password" class="validate">
+              <label for="registerPassword">Password</label>
+            </div>
+            
+            <div class="input-field">
+              <input id="registerPasswordConfirm" type="password" class="validate">
+              <label for="registerPasswordConfirm">Confirm Password</label>
+            </div>
+          </div>
+      
         </div>
-
-        <div class="input-field">
-          <input id="registerEmail" type="email" class="validate">
-          <label for="registerEmail">Email</label>
-        </div>
-
-        <div class="input-field">
-          <input id="registerPassword" type="password" class="validate">
-          <label for="registerPassword">password</label>
-        </div>
-
       </div>
-
+      
       <div class="modal-footer">
         <button id="registerButton" type="button" class="btn">Register</button>
-      </div>
-
+      </div>    
+      
     </div>
 
   </div>
