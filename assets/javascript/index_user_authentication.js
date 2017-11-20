@@ -1,6 +1,9 @@
 (function() {
 	"use strict";
 
+	// we can create a separate file for this function 
+	// and add link to html pages
+	// save lines in initializing firebase in every javascript files
 	function initializingFireBase() {
 		//initialize firebase
 		const config = {
@@ -39,7 +42,7 @@
 					alert('An account with this email address is already registered.');
 					break;
 				case 'auth/user-not-found':
-					alert('User with this address doesn\'t exist');
+					alert('User with this address does not exists.');
 					break;
 				case 'auth/wrong-password':
 					alert('The password does not match the sign in address.');
@@ -107,15 +110,20 @@
 
 			// if validate
 			validateInputValue(email, password).then(() => {
-				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
-					console.log('User signed in.', user.uid);
 
+				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
+					// stop user from signing in before verifing their email
+					if (!(user.emailVerified)) {
+						alert('Please verified your email before proceed.');
+						ssAppAuth.signOut().then(() => {
+							window.location.reload();
+						})
+					}
+					console.log('User signed in.', user.uid);
 					pageRedirect('/group.html');
 				}).catch(function(error) {
 					console.log('Error:  ' + error.code + ' ' + error.message);
 					errorHandler(error.code);
-
-					// adding error handling rules
 
 					// refresh page with erorr message indicating erorr type		
 					pageRedirect(window.location.href + "#" + error.message);
@@ -124,7 +132,7 @@
 			}).catch((error) => {
 				alert(error.message);
 			})
-		}; //  
+		};
 
 
 		signupBtn.onclick = function(event) {
@@ -137,6 +145,11 @@
 			// here goes input validation
 			validateInputValue(email, password, passwordConfirmation).then(() => {
 				ssAppAuth.createUserWithEmailAndPassword(email, password).then(function(user) {
+					var actionCodeSettings = {
+						url: 'httops://secret-santa-project.firebaseapp.com/?email=' + ssAppAuth.currentUser.email,
+						handleCodeInApp: false
+					};
+
 					ssAppAuth.currentUser.sendEmailVerification().then(function() {
 						alert('Email Verification Sent!');
 
@@ -158,7 +171,12 @@
 				}).catch(function(error) {
 					console.log('Error:  ' + error.code + ' ' + error.message);
 					errorHandler(error.code);
-					// error handling
+
+					// testing, delete user that got created even after exception 
+					if (!!ssAppAuth.currentUser) {
+						ssAppAuth.currentUser.delete();
+					}
+
 					pageRedirect(window.location.href + "#" + error.message);
 					$('input').val('');
 				})
@@ -166,8 +184,6 @@
 				alert(error.message);
 			});
 		};
-
-
 
 	}(jQuery));
 
