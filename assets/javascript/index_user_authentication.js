@@ -1,27 +1,6 @@
 (function() {
 	"use strict";
 
-	// we can create a separate file for this function
-	// and add link to html pages
-	// save lines in initializing firebase in every javascript files
-	function initializingFireBase() {
-		//initialize firebase
-		const config = {
-			apiKey: "AIzaSyDcO3BpfmGShgWNYjE-b-Wax18ZudRS9fk",
-			authDomain: "secret-santa-project.firebaseapp.com",
-			databaseURL: "https://secret-santa-project.firebaseio.com",
-			projectId: "secret-santa-project",
-			storageBucket: "secret-santa-project.appspot.com",
-			messagingSenderId: "889146133810"
-		};
-
-		firebase.initializeApp(config, "ssl");
-		// const ssl = firebase.app("ssl");
-		// return firebase.auth(ssl);
-		return firebase.app("ssl");
-	}
-
-	// main function handling user authentication
 	(function userAuthentication($) {
 
 		// get buttons
@@ -30,8 +9,7 @@
 
 		// secretsantaAppAuth = firebase.auth(ssl);
 		// secretsantaAppDatabase = firebase.database(ssl);
-		const ssl = initializingFireBase(),
-			ssAppAuth = firebase.auth(ssl),
+		const ssAppAuth = firebase.auth(ssl),
 			ssAppDatabase = firebase.database(ssl);
 
 		function pageRedirect(url) {
@@ -142,9 +120,11 @@
 
 			// input validation
 			validateInputValue(email, password).then(() => {
-				sessionStorage.setItem("auth", ssAppAuth.currentUser.uid);
-				console.log("Unique session ID: " + sessionStorage.getItem("auth"));
-				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
+
+				window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
+				console.log(sessionStorage.getItem('userid'));
+
+        ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
 						alert("Please verified your email before proceed.");
