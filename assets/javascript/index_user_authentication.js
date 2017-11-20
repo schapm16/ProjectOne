@@ -1,7 +1,7 @@
 (function() {
 	"use strict";
 
-	// we can create a separate file for this function 
+	// we can create a separate file for this function
 	// and add link to html pages
 	// save lines in initializing firebase in every javascript files
 	function initializingFireBase() {
@@ -81,7 +81,7 @@
 			});
 		}
 
-		// this function ping firebase user data with interval of 1 to 5 seconds to capture 
+		// this function ping firebase user data with interval of 1 to 5 seconds to capture
 		// currentUser.emailVerified update after user verified through the email sent to their address
 		// if verified, auto direct user to the main interface
 		// if after 5 min no update, throw and exception and reload the signin page
@@ -93,7 +93,7 @@
 					ssAppAuth.currentUser.reload();
 					console.log(ssAppAuth.currentUser.emailVerified);
 					console.log("It\'s been awhile I\'m gonna ping them again");
-					
+
 					if (ssAppAuth.currentUser.uid !== userId) {
 						throw new Error("The current user online is unfortunately, not you. The page will reload now.");
 						reject();
@@ -142,6 +142,8 @@
 
 			// input validation
 			validateInputValue(email, password).then(() => {
+				sessionStorage.setItem("auth", ssAppAuth.currentUser.uid);
+				console.log("Unique session ID: " + sessionStorage.getItem("auth"));
 				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
@@ -151,12 +153,13 @@
 						})
 					}
 					console.log("User signed in.", user.uid);
+
 					pageRedirect("/group.html");
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
 
-					// refresh page with erorr message indicating erorr type		
+					// refresh page with erorr message indicating erorr type
 					pageRedirect(window.location.href + "#" + error.message);
 					$("input").val("");
 				});
@@ -191,7 +194,7 @@
 								// only store user to database after they verified their email address
 								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias);
 								clearInterval(intervalId);
-								// the group.html is a placeholder page, which we can put a "Email Confirmed !!" 
+								// the group.html is a placeholder page, which we can put a "Email Confirmed !!"
 								// later into the project
 								console.log("Email Verified!!");
 								pageRedirect("/group.html");
@@ -206,7 +209,7 @@
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
 
-					// testing, delete user that got created even after exception 
+					// testing, delete user that got created even after exception
 					if (!!ssAppAuth.currentUser) {
 						ssAppAuth.currentUser.delete();
 					}
