@@ -2,12 +2,13 @@
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
 var userId = 1;
 var groupId = 1;
+
 var db = firebase.database();
 var userItemsInDB = db.ref("/groups/" + groupId + "/followers/" + userId + "/items");
 
 function addNewIdeaChip(ideaName) {
     console.log(ideaName);
-    userItemsInDB.push().set({ ideaName: 0 });
+    userItemsInDB.child(ideaName).set(0);
     var newIdea = $("<div>").addClass("chip close");
     var close = $("<i>").addClass("material-icons close");
     newIdea.attr("data-name", ideaName);
@@ -18,9 +19,7 @@ function addNewIdeaChip(ideaName) {
 }
 
 $(document).ready(function() {
-
     //Adding user's personal preference
-
     userItemsInDB
         .on('child_added', function(snap) {
             console.log(snap.key);
@@ -34,7 +33,7 @@ $(document).ready(function() {
 
     $("#giftIdeaButton").click(function() {
         var text = $("#giftIdea").val();
-        addNewIdeaChip(text);
+        userItemsInDB.child(text).set(0);
 
         $("#giftIdea").val("");
     });
