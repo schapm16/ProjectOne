@@ -9,8 +9,7 @@
 
 		// secretsantaAppAuth = firebase.auth(ssl);
 		// secretsantaAppDatabase = firebase.database(ssl);
-		const ssl = initializingFireBase(),
-			ssAppAuth = firebase.auth(ssl),
+		const ssAppAuth = firebase.auth(ssl),
 			ssAppDatabase = firebase.database(ssl);
 
 		function pageRedirect(url) {

@@ -1,6 +1,5 @@
 console.log("main script.js connected")
 
-var ssl = initializingFireBase();
 var db = firebase.database(ssl);
 
 $(document).ready(function() {

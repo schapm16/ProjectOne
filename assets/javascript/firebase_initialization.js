@@ -16,3 +16,7 @@ function initializingFireBase() {
 	// return firebase.auth(ssl);
 	return firebase.app("ssl");
 }
+
+// secretsantaAppAuth = firebase.auth(ssl);
+// secretsantaAppDatabase = firebase.database(ssl);
+var ssl = initializingFireBase();

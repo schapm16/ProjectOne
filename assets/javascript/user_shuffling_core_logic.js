@@ -3,8 +3,7 @@
 
 	(function($) {
 		console.log("script ran");
-		const ssl = initializingFireBase(),
-			ssAppDatabase = firebase.database(ssl);
+		const ssAppDatabase = firebase.database(ssl);
 
 		// getting the user identity by accessing session storage
 		const userId = window.sessionStorage.getItem('userid');
