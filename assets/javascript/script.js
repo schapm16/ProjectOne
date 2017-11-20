@@ -51,8 +51,15 @@ function displayGroupMembers(groupId) {
             .on("child_added", function(snapshot) {
                 $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
             });
+        setTimeout(function() {
+            updateMemberCount(groupId);
+        }, 500);
     });
     //.equalTo("123").
+
+    function updateMemberCount(groupID) {
+        $("#member-count" + groupID).text($("#member-list" + groupID + " li").length);
+    }
 
 
 
