@@ -5,6 +5,8 @@
 			ssAppDatabase = firebase.database(ssl);
 
 
+		const sendInviteBtn = document.getElementById('invite-btn');
+
 
 		console.log(ssAppAuth, ssAppDatabase);
 
