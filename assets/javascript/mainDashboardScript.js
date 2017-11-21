@@ -20,11 +20,17 @@ function addNewIdeaChip(ideaName) {
 
 $(document).ready(function() {
     //Adding user's personal preference
+    var userID = sessionStorage.getItem('userid');
+    console.log("userID: "+userID)
+    db.ref("/users/"+ userID).once("value", function(snap){
+        $(".userName").text(snap.val().Name);
+    });
+
     userItemsInDB
-        .on('child_added', function(snap) {
-            console.log(snap.key);
-            addNewIdeaChip(snap.key);
-        });
+    .on('child_added', function(snap) {
+        console.log(snap.key);
+        addNewIdeaChip(snap.key);
+    });
     //Removing element from HTML, and database
     $("#yourGiftIdeas").on("click", ".material-icons.close", function(event) {
         var par = $(event.target).parent().attr("data-name");
@@ -37,25 +43,23 @@ $(document).ready(function() {
 
         $("#giftIdea").val("");
     });
-    
-    
-    
+
     // Function to make Walmart API call and Display Results
     function walmartAPI(searchTerm) {
         var priceRange = 40;
-            
+
         var key = "bznsyj8ykctspk7c3fr4swkz";
         var url = "https://api.walmartlabs.com/v1/search?";
         
         //Walmart Carousel
-            $.ajax({
-                url: url,
-                method: "GET",
-                jsonp: "callback",
-                dataType: "jsonp",
-                data: {
-                    query: searchTerm,
-                    format: "json",
+        $.ajax({
+            url: url,
+            method: "GET",
+            jsonp: "callback",
+            dataType: "jsonp",
+            data: {
+                query: searchTerm,
+                format: "json",
                     //"facet.range": priceRange, //
                     apiKey: key
                 },
@@ -80,9 +84,9 @@ $(document).ready(function() {
                 }
                 $('.carousel').carousel();
             });
-    }
-    
-   
+        }
+
+
     //Function to make Ebay API call and Display Results
     function ebayAPI(searchTerm) {
         var key = "StephenC-SecretSa-PRD-6132041a0-943144c9";
@@ -105,22 +109,20 @@ $(document).ready(function() {
             console.log(result);
         });
     }
-   
-    
-    
+
     // Product Display Carousel on partner gift idea "chip" click
     
     var store = "walmart";
     var searchTerm;
     
     $(document).on("click","#walmart", function() {
-       if (store !== "walmart") {
-            $('.carousel').carousel('destroy');
-            $("#productDisplay").empty();
-            store = "walmart";
-            walmartAPI(searchTerm);
-       }
-    });
+      if (store !== "walmart") {
+        $('.carousel').carousel('destroy');
+        $("#productDisplay").empty();
+        store = "walmart";
+        walmartAPI(searchTerm);
+    }
+});
     
     $(document).on("click","#ebay", function() {
         if (store !== "ebay") {
@@ -132,7 +134,7 @@ $(document).ready(function() {
     });
     
     $(document).on("click", "#partnerGiftIdeas .chip", function() {
-        
+
         $("#storeSelection").css("display", "block");
         
         $('.carousel').carousel('destroy');
