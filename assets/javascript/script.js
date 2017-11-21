@@ -22,7 +22,7 @@ function displayGroup(groupName, groudId) {
     group.append($("<h5>").html(" <span id='member-count" + groudId + "'> </span>"));
     group.append($("<ul class='collection' id='member-list" + groudId + "'>"));
     group.append("<a class='waves-effect waves-light btn'><i class='material-icons left'>ac_unit</i>Start</a>");
-    group.append("<a class='waves-effect waves-light btn' id='expandEmail0'><i class='material-icons left'>email</i>Add</a>");
+    group.append("<a class='waves-effect waves-light btn emailbtn' data-target='emailForm" + groudId + "><i class='material-icons left'>email</i>Add</a>");
     form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
@@ -32,7 +32,14 @@ function displayGroup(groupName, groudId) {
 
 // displayGroup("Group One", 0);
 
-
+$(document).click(function(event) {
+    switch (event.target.class) {
+        case 'emailbtn':
+            var targetForm = event.target.attr("data-target");
+            targetForm.toggleClass("scale-out").toggleClass("scale-in");
+            break;
+    }
+});
 
 
 //TODO button click event listener
