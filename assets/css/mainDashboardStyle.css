@@ -56,8 +56,8 @@
 }
 
 #giftIdea:focus {
-     border-bottom: initial;
-     box-shadow: 0 1px 0 0 #000;
+     border-bottom: 1px solid black;
+     box-shadow: none ;
 }
 
 /*Partner Gift Idea Card*/
