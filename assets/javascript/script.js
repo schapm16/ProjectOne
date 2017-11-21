@@ -18,7 +18,6 @@ $(document).ready(function() {
     });
 });
 
-
 function displayGroup(groupName, groupID) {
     var group = $("<div class='group-item' id='group-" + groupID + "'>");
     var form = $("<form class='input-field scale-transition scale-out' id='emailForm" + groupID + "'>");
@@ -32,7 +31,6 @@ function displayGroup(groupName, groupID) {
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
     $(".s6").append(group);
     $(".s6").append(form);
-
 }
 
 // displayGroup("Group One", 0);
@@ -50,7 +48,7 @@ function displayGroupMembers(groupId) {
     console.log("start displaying " + groupId)
     db.ref("groups/" + groupId + "/followers").on("child_added", function(snapshot1) {
         console.log("Followers:" + snapshot1.val());
-
+console.log("TEST: " + snapshot1.val(x  ))
         db.ref("users/")
             .orderByChild("uniqueId")
             .equalTo(snapshot1.val())
@@ -61,13 +59,11 @@ function displayGroupMembers(groupId) {
             updateMemberCount(groupId);
         }, 500);
     });
-    //.equalTo("123").
 
     function updateMemberCount(groupID) {
         $("#member-count" + groupID).text("Secret Santas: " + $("#member-list" + groupID + " li").length);
     }
 }
-
 
 function shuffleMemberList(groupName) {
     // Fisher-Yates shuffling algorithm
@@ -100,10 +96,8 @@ function shuffleMemberList(groupName) {
 
     ssAppDatabse.ref('/groups/' + groupName + '/followers/').once('value').then(function(snapshot) {
         const memberList = Object.getOwnPropertyNames(snapshot.val());
-  
-
         const shuffledList = shuffle(memberList);
-        console.log(shuffledList);
+        console.log("Shuffled list: "+shuffledList);
         ssAppDatabse.ref('/groups/' + groupName + '/followersTest/').set(true);
         shuffledList.forEach(function(elem, index) {
             if (index === shuffledList.length - 1) {
@@ -112,5 +106,11 @@ function shuffleMemberList(groupName) {
             }
             ssAppDatabse.ref('/groups/' + groupName + '/followersTest/' + elem).set(shuffledList[index + 1]);
         });
+        //assigning pairs
+        ssAppDatabse.ref('/groups/' + groupName + '/followersTest/').once(function(snap){
+
+        });
+
+
     });
 }
