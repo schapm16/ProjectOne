@@ -82,28 +82,73 @@ $(document).ready(function() {
             });
     }
     
+    http://svcs.ebay.com/services/search/FindingService/v1?keywords=harry%20potter%20phoenix
+   
+    //Functionn to make Ebay API call and Display Results
+    function ebayAPI(searchTerm) {
+        var key = "StephenC-SecretSa-PRD-6132041a0-943144c9";
+        var url = "https://svcs.ebay.com/services/search/FindingService/v1";
+        
+        $.ajax({
+            url: url, 
+            method: "GET",
+            
+            // dataType: "jsonp",
+            // jsonp: "callbackname",
+            data: {
+                "OPERATION-NAME": "findItemsByKeywords",
+                "SERVICE-NAME": "FindingService",
+                "SERVICE-VERSION": "1.0.0",
+                "SECURITY-APPNAME": "StephenC-SecretSa-PRD-6132041a0-943144c9",
+                "RESPONSE-DATA-FORMAT": "JSON",
+                "paginationInput.entriesPerPage": "10",
+                keywords: searchTerm
+            }
+            
+        }).done(function(result) {
+            console.log(result);
+        });
+    }
+   
     
     
     // Product Display Carousel on partner gift idea "chip" click
     
-    var store = "Walmart";
+    var store = "walmart";
     var searchTerm;
     
+    $(document).on("click","#walmart", function() {
+       if (store !== "walmart") {
+            $('.carousel').carousel('destroy');
+            $("#productDisplay").empty();
+            store = "walmart";
+            walmartAPI(searchTerm);
+       }
+    });
     
-    
+    $(document).on("click","#ebay", function() {
+        if (store !== "ebay") {
+            $('.carousel').carousel('destroy');
+            $("#productDisplay").empty();
+            store = "ebay";
+            ebayAPI(searchTerm);
+        }
+    });
     
     $(document).on("click", "#partnerGiftIdeas .chip", function() {
+        
+        $("#storeSelection").css("display", "block");
         
         $('.carousel').carousel('destroy');
         $("#productDisplay").css("display", "block");
         $("#productDisplay").empty();
         searchTerm = $(this).text();
         
-        if (store === "Walmart") {
+        if (store === "walmart") {
             walmartAPI(searchTerm);    
         }
         
-        if (store === "Ebay") {
+        if (store === "ebay") {
             ebayAPI(searchTerm);
         }
     });

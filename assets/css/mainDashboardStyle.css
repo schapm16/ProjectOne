@@ -1,4 +1,4 @@
-
+/*Header*/
 #header {
     background-image: url("../images/banner3_edit2.jpeg");
     background-size: cover;
@@ -20,6 +20,8 @@
     border: 2px solid #D32323;
 }
 
+
+/*Drop Down Menu*/
 #menuButton {
     color: black;
     background-color: #FFF;
@@ -32,10 +34,15 @@
 #menu a{
     color: black;
 }
+
+
+
+/*Card - General*/
 .card {
     border-radius: 20px;
 }
 
+/*User Gift Idea Card*/
 #giftIdea {
     max-width: 80%;
 }
@@ -53,12 +60,30 @@
      box-shadow: 0 1px 0 0 #000;
 }
 
+/*Partner Gift Idea Card*/
 #partnerGiftIdeas .chip:hover {
     cursor: pointer;
     background-color: #12C644;
     
 }
 
+/*Store Selection*/
+#storeSelection {
+    margin-top: 20px;
+    display: none;
+}
+
+#storeSelection .btn {
+    color: black;
+    background-color: white;
+    box-shadow: none;
+    
+    border: 1px solid black;
+    border-radius: 20px;
+    
+}
+
+/*Product Display Carousel*/
 #productDisplay {
     Display: none;
 }
