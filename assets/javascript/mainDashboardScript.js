@@ -1,14 +1,13 @@
 /*global firebase $*/
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
-var userId = 1;
+var userID = 1;
 var groupId = 1;
+var userItemsInDB = 0;
 
 var db = firebase.database();
-var userItemsInDB = db.ref("/groups/" + groupId + "/followers/" + userId + "/items");
 
 function addNewIdeaChip(ideaName) {
     console.log(ideaName);
-    userItemsInDB.child(ideaName).set(0);
     var newIdea = $("<div>").addClass("chip close");
     var close = $("<i>").addClass("material-icons close");
     newIdea.attr("data-name", ideaName);
@@ -20,17 +19,20 @@ function addNewIdeaChip(ideaName) {
 
 $(document).ready(function() {
     //Adding user's personal preference
-    var userID = sessionStorage.getItem('userid');
-    console.log("userID: "+userID)
-    db.ref("/users/"+ userID).once("value", function(snap){
-        $(".userName").text(snap.val().Name);
-    });
-
-    userItemsInDB
-    .on('child_added', function(snap) {
+    userID = sessionStorage.getItem('userid');
+    console.log("userID: "+userID);
+    userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID + "/items");
+    userItemsInDB.on('child_added', function(snap) {
         console.log(snap.key);
         addNewIdeaChip(snap.key);
     });
+    db.ref("/users/"+ userID).once("value", function(snap){
+        $(".userName").text(snap.val().Name);
+        
+    });
+
+    db.ref("/groups/"+ groupId)
+
     //Removing element from HTML, and database
     $("#yourGiftIdeas").on("click", ".material-icons.close", function(event) {
         var par = $(event.target).parent().attr("data-name");
@@ -39,7 +41,8 @@ $(document).ready(function() {
 
     $("#giftIdeaButton").click(function() {
         var text = $("#giftIdea").val();
-        userItemsInDB.child(text).set(0);
+
+        userItemsInDB.child(text).set(text);
 
         $("#giftIdea").val("");
     });
@@ -85,7 +88,6 @@ $(document).ready(function() {
                 $('.carousel').carousel();
             });
         }
-
 
     //Function to make Ebay API call and Display Results
     function ebayAPI(searchTerm) {
