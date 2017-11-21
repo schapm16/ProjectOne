@@ -21,14 +21,13 @@ $(document).ready(function() {
     //Adding user's personal preference
     userID = sessionStorage.getItem('userid');
     console.log("userID: "+userID);
-    userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID + "/items");
+    userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID);
     userItemsInDB.on('child_added', function(snap) {
         console.log(snap.key);
         addNewIdeaChip(snap.key);
     });
     db.ref("/users/"+ userID).once("value", function(snap){
         $(".userName").text(snap.val().Name);
-        
     });
 
     db.ref("/groups/"+ groupId)
@@ -38,12 +37,10 @@ $(document).ready(function() {
         var par = $(event.target).parent().attr("data-name");
         userItemsInDB.child(par).remove();
     });
-
+    //adding element to DOM, and database
     $("#giftIdeaButton").click(function() {
         var text = $("#giftIdea").val();
-
         userItemsInDB.child(text).set(text);
-
         $("#giftIdea").val("");
     });
 
