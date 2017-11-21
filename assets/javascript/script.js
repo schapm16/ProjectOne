@@ -59,7 +59,7 @@ function displayGroupMembers(groupId) {
     //.equalTo("123").
 
     function updateMemberCount(groupID) {
-        $("#member-count" + groupID).text($("#member-list" + groupID + " li").length);
+        $("#member-count" + groupID).text("Secret Santas: " + $("#member-list" + groupID + " li").length);
     }
 
 
