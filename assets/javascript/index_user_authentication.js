@@ -95,7 +95,7 @@
 		//now saving the profile data
 		//saving works fine now, if we want to add additional fields to user"s database profile - we can add
 		//new property to the object in .set field
-		function pushUserInfoToDatabase(user, usrName, usrAlias) {
+		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName) {
 			ssAppDatabase.ref("/users/" + user.uid)
 				.set({
 					"Name": usrName,
@@ -106,7 +106,8 @@
 					console.log("User Information Saved:", user.uid);
 				});
 			//temporary adding all new users to the 1 group.
-			ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
+			ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(user.uid);
+			ssAppDatabase.ref("/groups/" + groupName + "/groupleader/").push(user.uid);
 		}
 
 
@@ -120,11 +121,7 @@
 
 			// input validation
 			validateInputValue(email, password).then(() => {
-
-				window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
-				console.log(sessionStorage.getItem('userid'));
-
-        ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
+				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
 						alert("Please verified your email before proceed.");
@@ -132,8 +129,10 @@
 							window.location.reload();
 						})
 					}
+					window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
+					console.log(sessionStorage.getItem('userid'));
+					
 					console.log("User signed in.", user.uid);
-
 					pageRedirect("/group.html");
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
@@ -153,6 +152,7 @@
 			const email = $("#registerEmail").val(),
 				password = $("#registerPassword").val(),
 				// I add a password confirmation in the modal so that we can prevent user from typo
+				groupName = $('#loginNewGroup').val(),
 				passwordConfirmation = $("#registerPasswordConfirm").val(),
 				usrName = $("#registerName").val(),
 				usrAlias = $("#registerAlias").val();
@@ -172,7 +172,7 @@
 							console.log(user);
 							emailVerificationStateReload().then(function(intervalId) {
 								// only store user to database after they verified their email address
-								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias);
+								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, groupName);
 								clearInterval(intervalId);
 								// the group.html is a placeholder page, which we can put a "Email Confirmed !!"
 								// later into the project
