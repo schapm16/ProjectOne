@@ -19,12 +19,11 @@ function addNewIdeaChip(ideaName) {
     $("#yourGiftIdeas").append(newIdea);
 }
 
-function displayPartnerIdeaChip(idea){
+function displayPartnerIdeaChip(ideaName){
     console.log("Partner's idea: "+ideaName);
     var newIdea = $("<div>").addClass("chip close");
     newIdea.attr("data-name", ideaName);
     newIdea.text(ideaName);
-    newIdea.append(close);
     $("#partnerGiftIdeas").append(newIdea);
 }
 
