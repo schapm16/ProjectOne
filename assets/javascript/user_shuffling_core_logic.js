@@ -29,8 +29,6 @@
 		// set token to true 
 		// disabled join function 
 
-
-
 	}(jQuery));
 	
 }());
