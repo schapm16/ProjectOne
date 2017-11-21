@@ -1,13 +1,15 @@
 /*global firebase $*/
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
 var userID = 1;
+var partnerID = false;
 var groupId = 1;
 var userItemsInDB = 0;
+var partnerItemsInDB = false;
 
 var db = firebase.database();
 
 function addNewIdeaChip(ideaName) {
-    console.log(ideaName);
+    console.log("Your's idea: "+ideaName);
     var newIdea = $("<div>").addClass("chip close");
     var close = $("<i>").addClass("material-icons close");
     newIdea.attr("data-name", ideaName);
@@ -17,19 +19,50 @@ function addNewIdeaChip(ideaName) {
     $("#yourGiftIdeas").append(newIdea);
 }
 
+function displayPartnerIdeaChip(idea){
+    console.log("Partner's idea: "+ideaName);
+    var newIdea = $("<div>").addClass("chip close");
+    newIdea.attr("data-name", ideaName);
+    newIdea.text(ideaName);
+    newIdea.append(close);
+    $("#partnerGiftIdeas").append(newIdea);
+}
+
 $(document).ready(function() {
     //Adding user's personal preference
     userID = sessionStorage.getItem('userid');
     console.log("userID: "+userID);
     userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID);
+
+    //get partner's id
+    db.ref("/groups/" + groupId + "/followers/" + userID)
+    .once("value",function(snapshot){
+        partnerID = snapshot.val();
+        console.log(partnerID);
+        //display partner name and items
+        partnerItemsInDB =  db.ref("/groups/" + groupId + "/giftideas/" + partnerID);
+
+        //display partner name
+        db.ref("/users/"+ partnerID).once("value", function(snap){
+        $(".partner").text(snap.val().Name);
+        });
+
+        partnerItemsInDB.on('child_added', function(snap) {
+        console.log(snap.key);
+        displayPartnerIdeaChip(snap.key);
+        });
+    });
+
+    //display username
+    db.ref("/users/"+ userID).once("value", function(snap){
+        $(".userName").text(snap.val().Name);
+    });
+    //display user's gift ideas
     userItemsInDB.on('child_added', function(snap) {
         console.log(snap.key);
         addNewIdeaChip(snap.key);
     });
-    db.ref("/users/"+ userID).once("value", function(snap){
-        $(".userName").text(snap.val().Name);
-    });
-
+    
     db.ref("/groups/"+ groupId)
 
     //Removing element from HTML, and database
