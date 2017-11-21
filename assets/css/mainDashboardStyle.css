@@ -4,7 +4,12 @@
     background-size: cover;
     background-position: bottom;
     
+    border-bottom: 5px solid #C51613;
+    box-shadow: 0 3px 7px #C8C8C8;
+    
     min-height: 25vh;
+    
+    margin-bottom: 20px;
     
 }
 
@@ -17,7 +22,7 @@
     margin-left: 2vw;
     
     border-radius: 15px;
-    border: 2px solid #D32323;
+    border: 3px solid #C51613;
 }
 
 
@@ -47,11 +52,11 @@
     max-width: 80%;
 }
 
-#giftIdeaButton {
-    background-color: #E4E4E4;
+.btn-floating {
+    background-color: #C51613;
 }
 
-#giftIdeaButton:hover {
+.btn-floating:hover {
     background-color: #12C644;
 }
 
