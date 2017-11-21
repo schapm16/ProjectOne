@@ -123,15 +123,16 @@
 			validateInputValue(email, password).then(() => {
 				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					// stop user from signing in before verifing their email
+					window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
+					console.log(sessionStorage.getItem('userid'));
+
 					if (!(user.emailVerified)) {
 						alert("Please verified your email before proceed.");
 						ssAppAuth.signOut().then(() => {
 							window.location.reload();
 						})
 					}
-					window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
-					console.log(sessionStorage.getItem('userid'));
-					
+									
 					console.log("User signed in.", user.uid);
 					pageRedirect("/group.html");
 				}).catch(function(error) {
