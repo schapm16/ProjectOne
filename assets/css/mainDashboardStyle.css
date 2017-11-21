@@ -1,5 +1,5 @@
-
-.nav-wrapper {
+/*Header*/
+#header {
     background-image: url("../images/banner3_edit2.jpeg");
     background-size: cover;
     background-position: bottom;
@@ -8,7 +8,7 @@
     
 }
 
-img {
+#header img {
     box-sizing: content-box;
     
     max-height: 20vh;
@@ -20,16 +20,71 @@ img {
     border: 2px solid #D32323;
 }
 
+
+/*Drop Down Menu*/
+#menuButton {
+    color: black;
+    background-color: #FFF;
+    max-width: 24px;
+    padding: 0;
+    box-shadow: none;
+    border: 1px solid black;
+}
+
+#menu a{
+    color: black;
+}
+
+
+
+/*Card - General*/
 .card {
     border-radius: 20px;
 }
 
+/*User Gift Idea Card*/
 #giftIdea {
     max-width: 80%;
 }
 
+#giftIdeaButton {
+    background-color: #E4E4E4;
+}
+
+#giftIdeaButton:hover {
+    background-color: #12C644;
+}
+
+#giftIdea:focus {
+     border-bottom: 1px solid black;
+     box-shadow: none ;
+}
+
+/*Partner Gift Idea Card*/
 #partnerGiftIdeas .chip:hover {
     cursor: pointer;
-    
+    background-color: #12C644;
     
 }
+
+/*Store Selection*/
+#storeSelection {
+    margin-top: 20px;
+    display: none;
+}
+
+#storeSelection .btn {
+    color: black;
+    background-color: white;
+    box-shadow: none;
+    
+    border: 1px solid black;
+    border-radius: 20px;
+    
+}
+
+/*Product Display Carousel*/
+#productDisplay {
+    Display: none;
+}
+
