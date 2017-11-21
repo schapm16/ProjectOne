@@ -1,27 +1,6 @@
 (function() {
 	"use strict";
 
-	// we can create a separate file for this function 
-	// and add link to html pages
-	// save lines in initializing firebase in every javascript files
-	function initializingFireBase() {
-		//initialize firebase
-		const config = {
-			apiKey: "AIzaSyDcO3BpfmGShgWNYjE-b-Wax18ZudRS9fk",
-			authDomain: "secret-santa-project.firebaseapp.com",
-			databaseURL: "https://secret-santa-project.firebaseio.com",
-			projectId: "secret-santa-project",
-			storageBucket: "secret-santa-project.appspot.com",
-			messagingSenderId: "889146133810"
-		};
-
-		firebase.initializeApp(config, "ssl");
-		// const ssl = firebase.app("ssl");
-		// return firebase.auth(ssl);
-		return firebase.app("ssl");
-	}
-
-	// main function handling user authentication
 	(function userAuthentication($) {
 
 		// get buttons
@@ -30,8 +9,7 @@
 
 		// secretsantaAppAuth = firebase.auth(ssl);
 		// secretsantaAppDatabase = firebase.database(ssl);
-		const ssl = initializingFireBase(),
-			ssAppAuth = firebase.auth(ssl),
+		const ssAppAuth = firebase.auth(ssl),
 			ssAppDatabase = firebase.database(ssl);
 
 		function pageRedirect(url) {
@@ -81,7 +59,7 @@
 			});
 		}
 
-		// this function ping firebase user data with interval of 1 to 5 seconds to capture 
+		// this function ping firebase user data with interval of 1 to 5 seconds to capture
 		// currentUser.emailVerified update after user verified through the email sent to their address
 		// if verified, auto direct user to the main interface
 		// if after 5 min no update, throw and exception and reload the signin page
@@ -93,7 +71,7 @@
 					ssAppAuth.currentUser.reload();
 					console.log(ssAppAuth.currentUser.emailVerified);
 					console.log("It\'s been awhile I\'m gonna ping them again");
-					
+
 					if (ssAppAuth.currentUser.uid !== userId) {
 						throw new Error("The current user online is unfortunately, not you. The page will reload now.");
 						reject();
@@ -142,7 +120,11 @@
 
 			// input validation
 			validateInputValue(email, password).then(() => {
-				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
+
+				window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
+				console.log(sessionStorage.getItem('userid'));
+
+        ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
 						alert("Please verified your email before proceed.");
@@ -151,12 +133,13 @@
 						})
 					}
 					console.log("User signed in.", user.uid);
+
 					pageRedirect("/group.html");
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
 
-					// refresh page with erorr message indicating erorr type		
+					// refresh page with erorr message indicating erorr type
 					pageRedirect(window.location.href + "#" + error.message);
 					$("input").val("");
 				});
@@ -191,7 +174,7 @@
 								// only store user to database after they verified their email address
 								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias);
 								clearInterval(intervalId);
-								// the group.html is a placeholder page, which we can put a "Email Confirmed !!" 
+								// the group.html is a placeholder page, which we can put a "Email Confirmed !!"
 								// later into the project
 								console.log("Email Verified!!");
 								pageRedirect("/group.html");
@@ -206,7 +189,7 @@
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
 
-					// testing, delete user that got created even after exception 
+					// testing, delete user that got created even after exception
 					if (!!ssAppAuth.currentUser) {
 						ssAppAuth.currentUser.delete();
 					}
