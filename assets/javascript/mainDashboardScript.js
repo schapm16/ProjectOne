@@ -44,14 +44,15 @@ $(document).ready(function() {
         $("#giftIdea").val("");
     });
 
+
+
     // Function to make Walmart API call and Display Results
     function walmartAPI(searchTerm) {
-        var priceRange = 40;
+        // var priceRange = 40;
 
         var key = "bznsyj8ykctspk7c3fr4swkz";
         var url = "https://api.walmartlabs.com/v1/search?";
         
-        //Walmart Carousel
         $.ajax({
             url: url,
             method: "GET",
@@ -107,11 +108,32 @@ $(document).ready(function() {
             
         }).done(function(result) {
             console.log(result);
+            
+            var short = result.findItemsByKeywordsResponse[0].searchResult[0];
+            
+            for (var i = 0; i < 10; i++) {
+                    var newImg = $("<img>");
+                    newImg.attr("src", short.item[i].galleryURL[0]);
+                    var Paragraph = $("<p>");
+                    Paragraph.text("Item" + i + ": $" + short.item[i].sellingStatus[0].currentPrice[0].__value__);
+                    var caruItem = $("<a id=img" + i + ">");
+                    caruItem.attr("class", 'carousel-item center-align');
+                    caruItem.attr("target", "_blank");
+                    caruItem.attr("href", short.item[i].viewItemURL[0]);
+                    caruItem.append(newImg);
+                    caruItem.append(Paragraph);
+                    $("#productDisplay").append(caruItem);
+                    $("#img" + i).hammer();
+                    $("#img" + i).on("tap", function() {
+                        window.open($(this).attr("href"), '_blank');
+                    });
+                }
+                $('.carousel').carousel();
         });
     }
 
+
     // Product Display Carousel on partner gift idea "chip" click
-    
     var store = "walmart";
     var searchTerm;
     
