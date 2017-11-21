@@ -82,9 +82,8 @@ $(document).ready(function() {
             });
     }
     
-    http://svcs.ebay.com/services/search/FindingService/v1?keywords=harry%20potter%20phoenix
    
-    //Functionn to make Ebay API call and Display Results
+    //Function to make Ebay API call and Display Results
     function ebayAPI(searchTerm) {
         var key = "StephenC-SecretSa-PRD-6132041a0-943144c9";
         var url = "https://svcs.ebay.com/services/search/FindingService/v1";
@@ -92,12 +91,9 @@ $(document).ready(function() {
         $.ajax({
             url: url, 
             method: "GET",
-            
-            // dataType: "jsonp",
-            // jsonp: "callbackname",
+            dataType: "jsonp",
             data: {
                 "OPERATION-NAME": "findItemsByKeywords",
-                "SERVICE-NAME": "FindingService",
                 "SERVICE-VERSION": "1.0.0",
                 "SECURITY-APPNAME": "StephenC-SecretSa-PRD-6132041a0-943144c9",
                 "RESPONSE-DATA-FORMAT": "JSON",
