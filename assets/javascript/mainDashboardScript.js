@@ -21,9 +21,7 @@ function addNewIdeaChip(ideaName) {
 
 function displayPartnerIdeaChip(ideaName){
     console.log("Partner's idea: "+ideaName);
-    var newIdea = $("<div>").addClass("chip close");
-    newIdea.attr("data-name", ideaName);
-    newIdea.text(ideaName);
+    var newIdea = $("<div class='chip'>").text(ideaName);
     $("#partnerGiftIdeas").append(newIdea);
 }
 
