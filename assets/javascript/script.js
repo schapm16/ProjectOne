@@ -12,7 +12,7 @@ $(document).ready(function() {
             displayGroup(element, element);
             displayGroupMembers(element);
             $(document).on("click", "#" + element, function() {
-                shuffleMemberList('Razer');
+                shuffleMemberList(element);
             });
         });
     });
@@ -110,16 +110,17 @@ function shuffleMemberList(groupName) {
 
     ssAppDatabse.ref('/groups/' + groupName + '/followers/').once('value').then(function(snapshot) {
         const memberList = Object.getOwnPropertyNames(snapshot.val());
-        console.log(memberList);
+  
 
-        // const shuffledList = shuffle(memberList);
-        // ssAppDatabse.ref('/groups/' + groupName + '/followers/').set(true);
-        // shuffledList.forEach(function(elem, index) {
-        //     if (index === shuffledList.length) {
-        //         ssAppDatabse.ref('/groups/' + groupName + '/followers/' + elem).set(shuffledList[0]);
-        //         return;
-        //     }
-        //     ssAppDatabse.ref('/groups/' + groupName + '/followers/' + elem).set(shuffledList[index + 1]);
-        // });
+        const shuffledList = shuffle(memberList);
+        console.log(shuffledList);
+        ssAppDatabse.ref('/groups/' + groupName + '/followersTest/').set(true);
+        shuffledList.forEach(function(elem, index) {
+            if (index === shuffledList.length - 1) {
+                ssAppDatabse.ref('/groups/' + groupName + '/followersTest/' + elem).set(shuffledList[0]);
+                return;
+            }
+            ssAppDatabse.ref('/groups/' + groupName + '/followersTest/' + elem).set(shuffledList[index + 1]);
+        });
     });
 }
