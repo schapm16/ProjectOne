@@ -1,11 +1,64 @@
+#header {
+    background-image: url("../images/banner3_edit2.jpeg");
+    background-size: cover;
+    background-position: bottom;
+    
+    border-bottom: 5px solid #C51613;
+    box-shadow: 0 3px 7px #C8C8C8;
+    
+    min-height: 25vh;
+    
+    margin-bottom: 20px;
+    
+}
+
+#header img {
+    box-sizing: content-box;
+    
+    max-height: 20vh;
+    width: auto;
+    
+    margin-left: 2vw;
+    
+    border-radius: 15px;
+    border: 3px solid #C51613;
+    
+}
+
 .card {
     border-radius: 20px;
 }
 .card-content {
-    overflow: auto;
+    overflow: hidden;
+}
+
+
+.input-field input:focus + label {
+    color: #000 !important;
+}
+
+.input-field input:focus {
+    border-bottom: 1px solid #000 !important;
+    box-shadow: none !important;
+}
+
+
+.btn-floating {
+    background-color: #C51613;
+}
+
+.btn-floating:hover {
+    background-color: #12C644;
 }
 
 .modal {
     min-height: 75%;
 }
 
+.modal #registerButton {
+    background-color: #C51613;
+}
+
+.modal #registerButton:hover {
+    background-color: #12C644;
+}
