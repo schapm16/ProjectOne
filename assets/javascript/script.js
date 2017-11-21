@@ -11,7 +11,9 @@ $(document).ready(function() {
         snapshot.val().split(",").forEach(function(element) {
             displayGroup(element, element);
             displayGroupMembers(element);
-            $("#" + element + ">i").onclick = shuffleMemberList('Razer');
+            $(document).on("click", "#" + element, function() {
+                shuffleMemberList('Razer');
+            });
         });
     });
 });
@@ -21,10 +23,11 @@ function displayGroup(groupName, groupId) {
     var form = $("<form class='input-field scale-transition scale-out' id='emailForm" + groupId + ">");
 
     group.append($("<h3 class='center'>"));
+
     group.append($("<h5>").html(" <span id='member-count" + groupId + "'> </span>"));
     group.append($("<ul class='collection' id='member-list" + groupId + "'>"));
     group.append("<a class='waves-effect waves-light btn' id='" + groupId + "'><i class='material-icons left'>ac_unit</i>Start</a>");
-    group.append("<a class='waves-effect waves-light btn' id='expandEmail0'><i class='material-icons left'>email</i>Add</a>");
+    group.append("<a class='waves-effect waves-light btn emailbtn' data-target='emailForm" + groupId + "><i class='material-icons left'>email</i>Add</a>");
     form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
@@ -34,6 +37,15 @@ function displayGroup(groupName, groupId) {
 }
 
 // displayGroup("Group One", 0);
+
+$(document).click(function(event) {
+    switch (event.target.class) {
+        case 'emailbtn':
+            var targetForm = event.target.attr("data-target");
+            targetForm.toggleClass("scale-out").toggleClass("scale-in");
+            break;
+    }
+});
 
 
 //TODO button click event listener
@@ -100,14 +112,14 @@ function shuffleMemberList(groupName) {
         const memberList = Object.getOwnPropertyNames(snapshot.val());
         console.log(memberList);
 
-        const shuffledList = shuffle(memberList);
-        ssAppDatabse.ref('/groups/' + groupName + '/followers/').set(true);
-        shuffledList.forEach(function(elem, index) {
-            if (index === shuffledList.length) {
-                ssAppDatabse.ref('/groups/' + groupName + '/followers/' + elem).set(shuffledList[0]);
-                return;
-            }
-            ssAppDatabse.ref('/groups/' + groupName + '/followers/' + elem).set(shuffledList[index + 1]);
-        });
+        // const shuffledList = shuffle(memberList);
+        // ssAppDatabse.ref('/groups/' + groupName + '/followers/').set(true);
+        // shuffledList.forEach(function(elem, index) {
+        //     if (index === shuffledList.length) {
+        //         ssAppDatabse.ref('/groups/' + groupName + '/followers/' + elem).set(shuffledList[0]);
+        //         return;
+        //     }
+        //     ssAppDatabse.ref('/groups/' + groupName + '/followers/' + elem).set(shuffledList[index + 1]);
+        // });
     });
 }

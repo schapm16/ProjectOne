@@ -47,6 +47,11 @@
     background-color: #C51613;
 }
 
+
+.btn-floating:focus {
+    background-color: #C51613;
+}
+
 .btn-floating:hover {
     background-color: #12C644;
 }

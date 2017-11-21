@@ -56,6 +56,7 @@ const ssAppDatabse = firebase.database(ssl);
 
 ssAppDatabse.ref('/groups/Tim\'s Santa Game/followers/').once('child_added').then(function(snapshot) {
 	const memberList = Object.getOwnPropertyNames(snapshot.val());
+	console.log(snapshot.val());
 	console.log(memberList);
 
 	const shuffledList = shuffle(memberList);
