@@ -48,13 +48,13 @@ function displayGroupMembers(groupId) {
     console.log("start displaying " + groupId)
     db.ref("groups/" + groupId + "/followers").on("child_added", function(snapshot1) {
         console.log("Followers:" + snapshot1.val());
-console.log("TEST: " + snapshot1.val(x  ))
+        console.log("TEST: " + snapshot1.val())
         db.ref("users/")
-            .orderByChild("uniqueId")
-            .equalTo(snapshot1.val())
-            .on("child_added", function(snapshot) {
-                $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
-            });
+        .orderByChild("uniqueId")
+        .equalTo(snapshot1.val())
+        .on("child_added", function(snapshot) {
+            $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
+        });
         setTimeout(function() {
             updateMemberCount(groupId);
         }, 500);
@@ -82,7 +82,7 @@ function shuffleMemberList(groupName) {
 
     function shuffle(targetArray) {
         let m = targetArray.length,
-            i;
+        i;
         while (m) {
             i = Math.floor(Math.random() * m--);
             swap(targetArray, i, m);
@@ -90,27 +90,38 @@ function shuffleMemberList(groupName) {
         return targetArray;
     }
 
-    // shuffling 
+    function makePairs(targetArray){
+        var object = {};
+        var length = targetArray.length-1;
+        for(var i = 0; i<length; i++){
+            object[targetArray[i]] = targetArray[i+1];
+        }
+        object[targetArray[i]] = targetArray[0];
+        return object;
+    }
 
+    // shuffling 
     const ssAppDatabse = firebase.database(ssl);
 
     ssAppDatabse.ref('/groups/' + groupName + '/followers/').once('value').then(function(snapshot) {
-        const memberList = Object.getOwnPropertyNames(snapshot.val());
-        const shuffledList = shuffle(memberList);
-        console.log("Shuffled list: "+shuffledList);
-        ssAppDatabse.ref('/groups/' + groupName + '/followersTest/').set(true);
-        shuffledList.forEach(function(elem, index) {
-            if (index === shuffledList.length - 1) {
-                ssAppDatabse.ref('/groups/' + groupName + '/followersTest/' + elem).set(shuffledList[0]);
-                return;
-            }
-            ssAppDatabse.ref('/groups/' + groupName + '/followersTest/' + elem).set(shuffledList[index + 1]);
-        });
+        //Return object values
+
+        const memberList = Object.values(snapshot.val());
+        console.log(memberList);
+        
+        var shuffledList = shuffle(memberList);
+        console.log("Shuffled list: " + shuffledList);
+
+        ssAppDatabse.ref('/groups/' + groupName + '/FollowersTest/').set(true);
+        
+        // shuffledList.forEach(function(elem, index) {
+        //     if (index === shuffledList.length - 1) {
+        //         ssAppDatabse.ref('/groups/' + groupName + '/FollowersTest/' + elem).set(shuffledList[0]);
+        //         return;
+        //     }
+        //     ssAppDatabse.ref('/groups/' + groupName + '/FollowersTest/' + elem).set(shuffledList[index + 1]);
+        // });
         //assigning pairs
-        ssAppDatabse.ref('/groups/' + groupName + '/followersTest/').once(function(snap){
-
-        });
-
-
+        ssAppDatabse.ref('/groups/' + groupName + '/FollowersTest/').set(makePairs(shuffledList));
     });
 }
