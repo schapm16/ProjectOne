@@ -172,7 +172,7 @@ $(document).ready(function() {
     }
 });
    
-    $("#singOut").click(function(){
+    $("#signOut").click(function(){
         sessionStorage.setItem("userid", "");
         window.location.assign("index.html");
     });
