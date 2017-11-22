@@ -41,7 +41,7 @@
 
 		// validateRegisterInput caught error in account signin and registeration before pinging firebase
 		// and do something about it
-		function validateRegisterInput(userName, alias, email, password, passwordConfirmation = false) {
+		function validateRegisterInput(userName, alias, email, password, passwordConfirmation) {
 			return new Promise(resolve => {
 				if (!userName) {
 					throw new Error('please give us your name, otherwise no one will know who you are');
@@ -62,7 +62,7 @@
 				}
 
 				// could add another check for password pattern
-				if (!!passwordConfirmation && passwordConfirmation !== password) {
+				if (passwordConfirmation !== password) {
 					messageModal("password-match");
 					throw new Error("password unmatch, please confirm your password");
 				}
@@ -78,13 +78,11 @@
 			return new Promise(resolve => {
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
 					throw new Error("invalid email input");
-					// reject();
 				}
 
 				if (password.length < 8 && password.length > 0) {
 					throw new Error("wrong password!!");
-					// reject();
-				} else if (password.length < 0) {
+				} else if (password.length <= 0) {
 					throw new Error("don't forget to fill your password!!");
 				}
 
@@ -129,7 +127,7 @@
 		//now saving the profile data
 		//saving works fine now, if we want to add additional fields to user"s database profile - we can add
 		//new property to the object in .set field
-		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName = false, joinGroupName = 0) {
+		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName = false, joinGroupName = false) {
 			ssAppDatabase.ref("/users/" + user.uid)
 				.set({
 					"Name": usrName,
@@ -143,19 +141,46 @@
 			ssAppAuth.currentUser.updateProfile({
 				displayName: usrName + " : " + usrAlias,
 			}).then(function() {
+
+				// if the player is not creating new group
+				if (!groupName) {
+					let playerGroups, userId = user.uid;
+					ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(userId);
+
+					ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
+						playerGroups = snapshot.val() + "," + joinGroupName;
+						ssAppDatabase.ref("/users/" + userId + "/groups").set(joinGroupName);
+					});
+				} else if (!joinGroupName) {
+					let playerGroups, newGroupKey, userId = user.uid;
+					newGroupKey = ssAppDatabase.ref("/groups/").push(true).key;
+					ssAppDatabase.ref("/groups/GroupsOnline/" + newGroupKey).set(groupName);
+
+					ssAppDatabase.ref("/groups/" + newGroupKey + "/followers/").push(userId);
+					ssAppDatabase.ref("/groups/" + newGroupKey + "/groupleader/").push(userId);
+					ssAppDatabase.ref("/groups/" + newGroupKey + "/NameOfGroup/").push(groupName);
+					ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
+						if (snapshot.val()) {
+							playerGroups = snapshot.val() + "," + newGroupKey;
+						} else {
+							playerGroups = newGroupKey;
+						}
+						ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
+					})
+				}
 				// alert("Display name: " + ssAppAuth.currentUser.displayName);
 				//temporary adding all new users to the 1 group.
 				// for group creation
 				// new group created is push to groups
 				// save group name to groupName  
 
-				ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(user.uid);
-				ssAppDatabase.ref("/groups/" + groupName + "/groupleader/").push(user.uid);
-				ssAppDatabase.ref("/users/" + user.uid + "/groups").set(groupName)
+				// ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(user.uid);
+				// ssAppDatabase.ref("/groups/" + groupName + "/groupleader/").push(user.uid);
+				// ssAppDatabase.ref("/users/" + user.uid + "/groups").set(groupName);
 
 				// for testing purpose only
-				ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
-				ssAppDatabase.ref("/users/" + user.uid + "/groups").set("0");
+				// ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
+				// ssAppDatabase.ref("/users/" + user.uid + "/groups").set("0");
 			});
 		}
 
@@ -190,8 +215,8 @@
 
 					// refresh page with erorr message indicating erorr type
 					// pageRedirect(window.location.href + "#" + error.message);
-					$("#registerPassword").val("");
-					$("#registerPasswordConfirm").val("");
+					$('#loginPassword').val("");
+
 				});
 			}).catch((error) => {
 				console.log(error.message);
@@ -255,8 +280,8 @@
 						ssAppAuth.currentUser.delete();
 					}
 
-					pageRedirect(window.location.href + "#" + error.message);
-					$("input").val("");
+					$("#registerPassword").val("");
+					$("#registerPasswordConfirm").val("");
 				})
 			}).catch((error) => {
 				console.log('This is where I caught user info input error');

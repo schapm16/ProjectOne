@@ -89,11 +89,11 @@ $(document).ready(function() {
         return;
     }
 
+
     // exit modal
     $("#acknowledgeButton").click(function() {
         $("#messageModal").modal("close");
     });
-
 
     $("#startRegisterButton").click(function() {
         var joinGroupName = $("#loginJoinGroup").val();
