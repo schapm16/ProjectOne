@@ -174,10 +174,10 @@ $(document).ready(function() {
    
     $("#singOut").click(function(){
         sessionStorage.setItem("userid", "");
-        window.location.assign("/index.html");
+        window.location.assign("index.html");
     });
      $("#switchGroup").click(function(){
-        window.location.assign("/group.html");
+        window.location.assign("group.html");
     });
 
 
