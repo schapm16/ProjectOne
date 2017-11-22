@@ -22,15 +22,15 @@
 			switch (errorCode) {
 				case "auth/email-already-in-use":
 				// alert("An account with this email address is already registered.");
-				loginErrorModal("email-already-used");
+				messageModal("email-already-used");
 				break;
 				case "auth/user-not-found":
 				// alert("User with this address does not exists.");
-				loginErrorModal("user-not-found");
+				messageModal("user-not-found");
 				break;
 				case "auth/wrong-password":
 				// alert("The password does not match the sign in address.");
-				loginErrorModal("password-incorrect")
+				messageModal("password-incorrect")
 				break
 				case "auth/network-request-failed":
 				// alert("Request timeout.");
@@ -46,18 +46,18 @@
 				// Name and Alias must not be blank or match test
 
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
-					loginErrorModal("invalid-email");
+					messageModal("invalid-email");
 					throw new Error("invalid email input");
 					reject();
 				}
 				if (password.length < 8) {
-					loginErrorModal("password-length");
+					messageModal("password-length");
 					throw new Error("password must be at least 8 characters long");
 					reject();
 				}
 				// could add another check for password pattern
 				if (!!passwordConfirmation && passwordConfirmation !== password) {
-					loginErrorModal("password-match");
+					messageModal("password-match");
 					throw new Error("password unmatch, please confirm your password");
 					reject();
 				}

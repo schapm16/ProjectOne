@@ -1,40 +1,40 @@
 /* global $ */
 
 
-function loginErrorModal(errorType) {
+function messageModal(errorType) {
     
     switch (errorType) {
     
     //Registration Errors
     case "email-already-used":
-      $("#errorMessage").text("This email address is already registered to an account.");
-      $("#errorModal").modal("open");
+      $("#message").text("This email address is already registered to an account.");
+      $("#messageModal").modal("open");
       break;
       
     case "invalid-email":
-      $("#errorMessage").text("The email address entered is invalid.");
-      $("#errorModal").modal("open");
+      $("#message").text("The email address entered is invalid.");
+      $("#messageModal").modal("open");
       break;
     
     case "password-length":
-      $("#errorMessage").text("Password must be at least 8 characters.");
-      $("#errorModal").modal("open");
+      $("#message").text("Password must be at least 8 characters.");
+      $("#messageModal").modal("open");
       break;
       
     case "password-match":
-      $("#errorMessage").text("The passwords entered do not match.");
-      $("#errorModal").modal("open");
+      $("#message").text("The passwords entered do not match.");
+      $("#messageModal").modal("open");
       break;
     
     //Login Errors
     case "user-not-found": 
-      $("#errorMessage").text("The email address provided is not registered to an existing account.");
-      $("#errorModal").modal("open");
+      $("#message").text("The email address provided is not registered to an existing account.");
+      $("#messageModal").modal("open");
       break;
       
     case("password-incorrect"):
-      $("#errorMessage").text("The password entered is incorrect.");
-      $("#errorModal").modal("open");
+      $("#message").text("The password entered is incorrect.");
+      $("#messageModal").modal("open");
       break;
     }
     
@@ -48,20 +48,20 @@ $(document).ready(function(){
   
   
   $("#startRegisterButton").click(function() {
-  
-    var joinGroupName = $("#loginJoinGroup").val();
-    var createGroupName = $("#loginCreateGroup").val();
+    //If user validation remains completely in index_user_authentication.js these can be deleted.
+    // var joinGroupName = $("#loginJoinGroup").val();
+    // var createGroupName = $("#loginCreateGroup").val();
     
-    var userEmail = $("#loginEmail").val();
-    var userPassword = $("#loginPassword").val();
+    // var userEmail = $("#loginEmail").val();
+    // var userPassword = $("#loginPassword").val();
     
-    
+    //This should be conditional on either Create Group or Join Group being filled out
     $("#registerModal").modal("open");
     
   });
   
   $("#acknowledgeButton").click(function() {
-    $("#errorModal").modal("close");
+    $("#messageModal").modal("close");
     
   });
     
