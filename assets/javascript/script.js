@@ -9,7 +9,7 @@ $(document).ready(function() {
     db.ref("users/" + auth + "/groups").on("value", function(snapshot) {
         console.log("Groups:" + snapshot.val().split(","));
         snapshot.val().split(",").forEach(function(element) {
-            displayGroup(element, element);
+            displayGroup(element);
             displayGroupMembers(element);
             $(document).on("click", "#" + element, function() {
                 shuffleMemberList(element);
@@ -18,7 +18,7 @@ $(document).ready(function() {
     });
 });
 
-function displayGroup(groupName, groupID) {
+function displayGroup(groupID) {
     var group = $("<div class='group-item' id='group-" + groupID + "'>");
     var form = $("<form class='input-field scale-transition scale-out' id='emailForm" + groupID + "'>");
     group.append($("<h3 class='center'>"));
@@ -44,6 +44,9 @@ $(document).click(function(event) {
 });
 
 function displayGroupMembers(groupId) {
+    db.ref("groups/" + groupId + "/NameOfGroup/").once("value",function(snap){
+        $("#group-" + groupId + " > h3").text("Group " + snap.val());
+    });
     $("#group-" + groupId + " > h3").text("Group " + groupId);
     console.log("start displaying " + groupId)
     db.ref("groups/" + groupId + "/followers").on("child_added", function(snapshot1) {
