@@ -156,7 +156,7 @@ $(document).click(function(event) {
 
         if (inviteEmail) {
             document.getElementById('inviteEmailButton').onclick = function() {
-                const url = 'http://localhost:8000/index.html#' + groupId,
+                const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
                     emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!"
                 console.log(url);
                 console.log(emailContent);
