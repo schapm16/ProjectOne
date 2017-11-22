@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     $(".s6").on("click", ".goButton", function() {
         console.log("knok")
-        window.location.assign("/mainDashboard.html");
+        window.location.assign("mainDashboard.html");
     });
 
     var auth = sessionStorage.getItem("userid");
