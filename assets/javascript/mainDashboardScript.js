@@ -2,7 +2,7 @@
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
 var userID = 1;
 var partnerID = false;
-var groupId = 1;
+var groupId = 0;
 var userItemsInDB = 0;
 var partnerItemsInDB = false;
 
@@ -32,10 +32,10 @@ $(document).ready(function() {
     userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID);
 
     //get partner's id
-    db.ref("/groups/" + groupId + "/followers/" + userID)
+    db.ref("/groups/" + groupId + "/FollowersTest/" + userID)
     .once("value",function(snapshot){
         partnerID = snapshot.val();
-        console.log(partnerID);
+        console.log("PartnerID: "+partnerID);
         //display partner name and items
         partnerItemsInDB =  db.ref("/groups/" + groupId + "/giftideas/" + partnerID);
 
