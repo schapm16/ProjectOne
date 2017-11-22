@@ -21,16 +21,19 @@
 		function errorHandler(errorCode) {
 			switch (errorCode) {
 				case "auth/email-already-in-use":
-				alert("An account with this email address is already registered.");
+				// alert("An account with this email address is already registered.");
+				loginErrorModal("email-already-used");
 				break;
 				case "auth/user-not-found":
-				alert("User with this address does not exists.");
+				// alert("User with this address does not exists.");
+				loginErrorModal("user-not-found");
 				break;
 				case "auth/wrong-password":
-				alert("The password does not match the sign in address.");
+				// alert("The password does not match the sign in address.");
+				loginErrorModal("password-incorrect")
 				break
 				case "auth/network-request-failed":
-				alert("Request timeout.");
+				// alert("Request timeout.");
 				break;
 					// case ""
 				}
@@ -43,15 +46,18 @@
 				// Name and Alias must not be blank or match test
 
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
+					loginErrorModal("invalid-email");
 					throw new Error("invalid email input");
 					reject();
 				}
 				if (password.length < 8) {
+					loginErrorModal("password-length");
 					throw new Error("password must be at least 8 characters long");
 					reject();
 				}
 				// could add another check for password pattern
 				if (!!passwordConfirmation && passwordConfirmation !== password) {
+					loginErrorModal("password-match");
 					throw new Error("password unmatch, please confirm your password");
 					reject();
 				}
@@ -162,7 +168,7 @@
 					$("input").val("");
 				});
  			}).catch((error) => {
- 				alert(error.message);
+ 				console.log(error.message);
  			})
  		};
 
@@ -218,7 +224,7 @@
 					$("input").val("");
 				})
 			}).catch((error) => {
-				alert(error.message);
+				console.log(error.message);
 			});
 		};
 
