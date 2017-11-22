@@ -81,15 +81,13 @@ $(document).click(function(event) {
         const groupId = targetForm.replace(/\bemailForm/, ""),
             inviteEmail = $('#inviteEmail').val();
 
-        if (inviteEmail) {
-            document.getElementById('inviteEmailButton').onclick = function() {
-                const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
-                    emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!"
-                console.log(url);
-                console.log(emailContent);
+        document.querySelector('#inviteEmailButton').onclick = function() {
+            const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
+                emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!"
+            console.log(url);
+            console.log(emailContent);
 
-                window.open("mailto:" + email + "?subject=" + "Cool Secret Santa Game" + "&body=" + emailContent);
-            }
+            window.open("mailto:" + inviteEmail + "?subject=" + "Cool Secret Santa Game" + "&body=" + emailContent);
         }
     }
 });
