@@ -3,7 +3,12 @@ console.log("main script.js connected")
 var db = firebase.database(ssl);
 
 $(document).ready(function() {
-    
+
+    $(".s6").on("click", ".goButton", function() {
+        console.log("knok")
+        window.location.assign("/mainDashboard.html");
+    });
+
     var auth = sessionStorage.getItem("userid");
     console.log("Session uID:" + auth);
 
@@ -14,20 +19,20 @@ $(document).ready(function() {
             displayGroupMembers(element);
             $(document).on("click", "#" + element, function() {
                 shuffleMemberList(element);
-                $("#goButton"+element).removeClass("hide");
+                $("#goButton" + element).removeClass("hide");
             });
-            db.ref("groups/"+element+"/groupleader").once("value", function(snap){
-                console.log("Groupleader: "+snap.val());
-                if(auth==snap.val()){
-                    $("#"+element).removeClass("hide");
-                    $("#"+element+"email").removeClass("hide");
+            db.ref("groups/" + element + "/groupleader").once("value", function(snap) {
+                console.log("Groupleader: " + snap.val());
+                if (auth == snap.val()) {
+                    $("#" + element).removeClass("hide");
+                    $("#" + element + "email").removeClass("hide");
                 }
             });
-            db.ref("groups/"+element+"/FollowersTest").once('value', function(snap){
-                if(snap.val()!=null){
-                    $("#goButton"+element).removeClass("hide");
+            db.ref("groups/" + element + "/FollowersTest").once('value', function(snap) {
+                if (snap.val() != null) {
+                    $("#goButton" + element).removeClass("hide");
                 }
-            }); 
+            });
         });
     });
 });
@@ -46,7 +51,6 @@ function displayGroup(groupID) {
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
     group.append("<a class='waves-effect waves-light btn hide' id='goButton"+groupID+"'  data-groupId='"+groupID+"'>Go!</a>");
-
     $(".s6").append(group);
     $(".s6").append(form);
 
@@ -60,16 +64,36 @@ function displayGroup(groupID) {
 
 // displayGroup("Group One", 0);
 
+// $(document).click(function(event) {
+//     if ($(event.target).hasClass('emailbtn')) {
+//         var targetForm = $(event.target).attr("data-target");
+//         console.log(targetForm);
+//         $(document.getElementById(targetForm)).toggleClass("scale-out").toggleClass("scale-in");
+//     }
+// });
+
 $(document).click(function(event) {
     if ($(event.target).hasClass('emailbtn')) {
         var targetForm = $(event.target).attr("data-target");
         console.log(targetForm);
         $(document.getElementById(targetForm)).toggleClass("scale-out").toggleClass("scale-in");
+
+        const groupId = targetForm.replace(/\bemailForm/, ""),
+            inviteEmail = $('#inviteEmail').val();
+
+        document.querySelector('#inviteEmailButton').onclick = function() {
+            const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
+                emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!"
+            console.log(url);
+            console.log(emailContent);
+
+            window.open("mailto:" + inviteEmail + "?subject=" + "Cool Secret Santa Game" + "&body=" + emailContent);
+        }
     }
 });
 
 function displayGroupMembers(groupId) {
-    db.ref("groups/" + groupId + "/NameOfGroup/").once("value",function(snap){
+    db.ref("groups/" + groupId + "/NameOfGroup/").once("value", function(snap) {
         $("#group-" + groupId + " > h3").text("Group " + snap.val());
     });
     $("#group-" + groupId + " > h3").text("Group " + groupId);
@@ -78,11 +102,11 @@ function displayGroupMembers(groupId) {
         console.log("Followers:" + snapshot1.val());
         console.log("TEST: " + snapshot1.val())
         db.ref("users/")
-        .orderByChild("uniqueId")
-        .equalTo(snapshot1.val())
-        .on("child_added", function(snapshot) {
-            $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
-        });
+            .orderByChild("uniqueId")
+            .equalTo(snapshot1.val())
+            .on("child_added", function(snapshot) {
+                $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
+            });
         setTimeout(function() {
             updateMemberCount(groupId);
         }, 500);
@@ -110,7 +134,7 @@ function shuffleMemberList(groupName) {
 
     function shuffle(targetArray) {
         let m = targetArray.length,
-        i;
+            i;
         while (m) {
             i = Math.floor(Math.random() * m--);
             swap(targetArray, i, m);
@@ -118,11 +142,11 @@ function shuffleMemberList(groupName) {
         return targetArray;
     }
 
-    function makePairs(targetArray){
+    function makePairs(targetArray) {
         var object = {};
-        var length = targetArray.length-1;
-        for(var i = 0; i<length; i++){
-            object[targetArray[i]] = targetArray[i+1];
+        var length = targetArray.length - 1;
+        for (var i = 0; i < length; i++) {
+            object[targetArray[i]] = targetArray[i + 1];
         }
         object[targetArray[i]] = targetArray[0];
         return object;
@@ -136,12 +160,12 @@ function shuffleMemberList(groupName) {
 
         const memberList = Object.values(snapshot.val());
         console.log(memberList);
-        
+
         var shuffledList = shuffle(memberList);
         console.log("Shuffled list: " + shuffledList);
 
         ssAppDatabse.ref('/groups/' + groupName + '/FollowersTest/').set(true);
-        
+
         // shuffledList.forEach(function(elem, index) {
         //     if (index === shuffledList.length - 1) {
         //         ssAppDatabse.ref('/groups/' + groupName + '/FollowersTest/' + elem).set(shuffledList[0]);

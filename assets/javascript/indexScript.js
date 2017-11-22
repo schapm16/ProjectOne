@@ -120,6 +120,8 @@ $(document).ready(function() {
                     Object.values(snapshot.val()).forEach((elem) => {
                         console.log(elem);
                         joinGroupName === elem && (groupNameExist = true);
+                        console.log("Joingroup:"+joinGroupName);
+                        console.log("GroupID"+ snapshot.val());
                     });
                     groupNameExist ? resolve() :
                         reject(new Error('The group name you entered doesn\'t match any existing group'));
