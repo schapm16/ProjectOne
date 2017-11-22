@@ -2,7 +2,7 @@
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
 var userID = 1;
 var partnerID = false;
-var groupId = 0;
+var groupId = window.sessionStorage.getItem('currentGroupId');
 var userItemsInDB = 0;
 var partnerItemsInDB = false;
 

@@ -57,7 +57,7 @@ function displayGroup(groupID) {
 
     $(".s6").on("click", "#goButton" + groupID, function() {
         console.log("knok")
-        window.location.assign("/mainDashboard.html");
+        window.location.assign("mainDashboard.html");
     });
 
 }
