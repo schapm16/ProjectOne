@@ -53,17 +53,10 @@ function displayGroup(groupID) {
     group.append("<a class='waves-effect waves-light btn hide' id='goButton"+groupID+"'  data-groupId='"+groupID+"'>Go!</a>");
     $(".s6").append(group);
     $(".s6").append(form);
-
-<<<<<<< HEAD
-    $(".s6").on("click", "#goButton" + groupID, function() {
-        console.log("knok")
-        window.location.assign("mainDashboard.html");
-=======
     $(".s6").on("click", "#goButton"+groupID, function(event){
         console.log("knock");
         sessionStorage.setItem("currentGroupId", $(event.currentTarget).attr("data-groupid"));
         window.location.assign("/mainDashboard.html");
->>>>>>> e1c88533adb1b312466f5a3a85bd13e59a75dc50
     });
 
 }

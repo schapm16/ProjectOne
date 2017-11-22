@@ -6,6 +6,8 @@
 
 		const sendInviteBtn = document.getElementById('invite-btn');
 
+
+		ssAppDatabase
 		// so the key links packaging info is to add them as a string after #
 		// then for the invite login, I can use a simple function to parse the data and set the user 
 		// to the correct group
