@@ -14,6 +14,7 @@ $(document).ready(function() {
             displayGroupMembers(element);
             $(document).on("click", "#" + element, function() {
                 shuffleMemberList(element);
+                $("#goButton"+element).removeClass("hide");
             });
             db.ref("groups/"+element+"/groupleader").once("value", function(snap){
                 console.log("Groupleader: "+snap.val());
@@ -26,7 +27,7 @@ $(document).ready(function() {
                 if(snap.val()!=null){
                     $("#goButton"+element).removeClass("hide");
                 }
-            });
+            }); 
         });
     });
 });
