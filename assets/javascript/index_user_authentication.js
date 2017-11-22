@@ -4,7 +4,6 @@
 	(function userAuthentication($) {
 		// get buttons
 		const loginBtn = document.getElementById("loginButton"),
-			// startRegisterBtn = document.getElementById("startRegisterButton"),
 			signupBtn = document.getElementById("registerButton");
 
 		// secretsantaAppAuth = firebase.auth(ssl);
@@ -38,8 +37,6 @@
 			}
 		}
 
-
-		// validateRegisterInput caught error in account signin and registeration before pinging firebase
 		// and do something about it
 		function validateRegisterInput(userName, alias, email, password, passwordConfirmation) {
 			return new Promise(resolve => {
@@ -98,7 +95,6 @@
 			return new Promise((resolve, reject) => {
 				// stored the current user in cache to make sure that the currentUser doesn't change at time of pinging
 				const userId = ssAppAuth.currentUser.uid;
-				let timeOut;
 
 				let reloadInterval = setInterval(function() {
 					ssAppAuth.currentUser.reload();
@@ -144,12 +140,22 @@
 
 				// if the player is not creating new group
 				if (!groupName) {
-					let playerGroups, userId = user.uid;
-					ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(userId);
-
-					ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
-						playerGroups = snapshot.val() + "," + joinGroupName;
-						ssAppDatabase.ref("/users/" + userId + "/groups").set(joinGroupName);
+					let playerGroups, groupKey, userId = user.uid;
+					ssAppDatabase.ref("/groups/GroupsOnline/").once("value").then((snapshot) => {
+						Object.getOwnPropertyNames(snapshot.val()).forEach(function(elem) {
+							if (snapshot.child(elem).val() === joinGroupName) {
+								groupKey = elem;
+							}
+						})
+						ssAppDatabase.ref("/groups/" + groupKey + "/followers/").push(userId);
+						ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
+							if (snapshot.val()) {
+								playerGroups = snapshot.val() + "," + groupKey;
+							} else {
+								playerGroups = groupKey;
+							}
+							ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
+						})
 					});
 				} else if (!joinGroupName) {
 					let playerGroups, newGroupKey, userId = user.uid;
@@ -157,8 +163,8 @@
 					ssAppDatabase.ref("/groups/GroupsOnline/" + newGroupKey).set(groupName);
 
 					ssAppDatabase.ref("/groups/" + newGroupKey + "/followers/").push(userId);
-					ssAppDatabase.ref("/groups/" + newGroupKey + "/groupleader/").push(userId);
-					ssAppDatabase.ref("/groups/" + newGroupKey + "/NameOfGroup/").push(groupName);
+					ssAppDatabase.ref("/groups/" + newGroupKey + "/groupleader/").set(userId);
+					ssAppDatabase.ref("/groups/" + newGroupKey + "/NameOfGroup/").set(groupName);
 					ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
 						if (snapshot.val()) {
 							playerGroups = snapshot.val() + "," + newGroupKey;
@@ -168,20 +174,9 @@
 						ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
 					})
 				}
-				// alert("Display name: " + ssAppAuth.currentUser.displayName);
-				//temporary adding all new users to the 1 group.
-				// for group creation
-				// new group created is push to groups
-				// save group name to groupName  
-
-				// ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(user.uid);
-				// ssAppDatabase.ref("/groups/" + groupName + "/groupleader/").push(user.uid);
-				// ssAppDatabase.ref("/users/" + user.uid + "/groups").set(groupName);
-
-				// for testing purpose only
-				// ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
-				// ssAppDatabase.ref("/users/" + user.uid + "/groups").set("0");
+				
 			});
+
 		}
 
 
