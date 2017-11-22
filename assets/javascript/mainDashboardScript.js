@@ -171,7 +171,17 @@ $(document).ready(function() {
         walmartAPI(searchTerm);
     }
 });
-    
+   
+    $("#singOut").click(function(){
+        sessionStorage.setItem("userid", "");
+        window.location.assign("/index.html");
+    });
+     $("#switchGroup").click(function(){
+        window.location.assign("/group.html");
+    });
+
+
+
     $(document).on("click","#ebay", function() {
         if (store !== "ebay") {
             $('.carousel').carousel('destroy');
