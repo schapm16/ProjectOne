@@ -1,0 +1,39 @@
+#header {
+    background-image: url("../images/banner3_edit2.jpeg");
+    background-size: cover;
+    background-position: bottom;
+    
+    border-bottom: 5px solid #C51613;
+    box-shadow: 0 3px 7px #C8C8C8;
+    
+    min-height: 25vh;
+    
+    margin-bottom: 20px;
+    
+}
+
+#header img {
+    box-sizing: content-box;
+    
+    max-height: 20vh;
+    width: auto;
+    
+    margin-left: 2vw;
+    
+    border-radius: 15px;
+    border: 3px solid #C51613;
+    
+}
+
+.btn, .btn-floating {
+    background-color: #C51613;
+}
+
+
+.btn:focus, .btn-floating:focus {
+    background-color: #C51613;
+}
+
+.btn:hover, .btn-floating:hover {
+    background-color: #12C644;
+}
