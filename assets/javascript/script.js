@@ -3,11 +3,7 @@ console.log("main script.js connected")
 var db = firebase.database(ssl);
 
 $(document).ready(function() {
-    $(".s6").on("click", ".goButton", function(){
-        console.log("knok")
-        window.location.assign("/mainDashboard.html");
-    });
-
+    
     var auth = sessionStorage.getItem("userid");
     console.log("Session uID:" + auth);
 
@@ -18,6 +14,7 @@ $(document).ready(function() {
             displayGroupMembers(element);
             $(document).on("click", "#" + element, function() {
                 shuffleMemberList(element);
+                $("#goButton"+element).removeClass("hide");
             });
             db.ref("groups/"+element+"/groupleader").once("value", function(snap){
                 console.log("Groupleader: "+snap.val());
@@ -25,10 +22,16 @@ $(document).ready(function() {
                     $("#"+element).removeClass("hide");
                     $("#"+element+"email").removeClass("hide");
                 }
-            })
+            });
+            db.ref("groups/"+element+"/FollowersTest").once('value', function(snap){
+                if(snap.val()!=null){
+                    $("#goButton"+element).removeClass("hide");
+                }
+            }); 
         });
     });
 });
+
 
 function displayGroup(groupID) {
     var group = $("<div class='group-item' id='group-" + groupID + "'>");
@@ -42,10 +45,16 @@ function displayGroup(groupID) {
     form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
-    group.append("<a class='waves-effect waves-light btn goButton'>Go!</a>");
+    group.append("<a class='waves-effect waves-light btn hide' id='goButton"+groupID+"'>Go!</a>");
 
     $(".s6").append(group);
     $(".s6").append(form);
+
+    $(".s6").on("click", "#goButton"+groupID, function(){
+        console.log("knok")
+        window.location.assign("/mainDashboard.html");
+    });
+
 }
 
 // displayGroup("Group One", 0);
