@@ -5,12 +5,13 @@
 
 		// get buttons
 		const loginBtn = document.getElementById("loginButton"),
-		signupBtn = document.getElementById("registerButton");
+			// startRegisterBtn = document.getElementById("startRegisterButton"),
+			signupBtn = document.getElementById("registerButton");
 
 		// secretsantaAppAuth = firebase.auth(ssl);
 		// secretsantaAppDatabase = firebase.database(ssl);
 		const ssAppAuth = firebase.auth(ssl),
-		ssAppDatabase = firebase.database(ssl);
+			ssAppDatabase = firebase.database(ssl);
 
 		function pageRedirect(url) {
 			window.location.assign(url);
@@ -21,40 +22,60 @@
 		function errorHandler(errorCode) {
 			switch (errorCode) {
 				case "auth/email-already-in-use":
-				alert("An account with this email address is already registered.");
-				break;
+					alert("An account with this email address is already registered.");
+					break;
 				case "auth/user-not-found":
-				alert("User with this address does not exists.");
-				break;
+					alert("User with this address does not exists.");
+					break;
 				case "auth/wrong-password":
-				alert("The password does not match the sign in address.");
-				break
+					alert("The password does not match the sign in address.");
+					break
 				case "auth/network-request-failed":
-				alert("Request timeout.");
-				break;
-					// case ""
-				}
+					alert("Request timeout.");
+					break;
 			}
+		}
 
-		// validateInputValue caught error in account signin and registeration before pinging firebase
+		// validateRegisterInput caught error in account signin and registeration before pinging firebase
 		// and do something about it
-		function validateInputValue(email, password, passwordConfirmation = false) {
+		function validateRegisterInput(userName, alias, email, password, passwordConfirmation = false) {
 			return new Promise(resolve => {
-				// Name and Alias must not be blank or match test
 
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
 					throw new Error("invalid email input");
-					reject();
+					// reject();
 				}
+
 				if (password.length < 8) {
 					throw new Error("password must be at least 8 characters long");
-					reject();
+					// reject();
 				}
 				// could add another check for password pattern
 				if (!!passwordConfirmation && passwordConfirmation !== password) {
 					throw new Error("password unmatch, please confirm your password");
-					reject();
+					// reject();
 				}
+				resolve();
+			});
+		}
+
+
+		// validateRegisterInput caught error in account signin and registeration before pinging firebase
+		// and do something about it
+		function validateLoginInput(email, password) {
+			return new Promise(resolve => {
+				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
+					throw new Error("invalid email input");
+					// reject();
+				}
+
+				if (password.length < 8 && password.length > 0) {
+					throw new Error("wrong password!!");
+					// reject();
+				} else {
+					throw new Error("don't forget to fill your password!!");
+				}
+
 				resolve();
 			});
 		}
@@ -64,13 +85,10 @@
 		// if verified, auto direct user to the main interface
 		// if after 5 min no update, throw and exception and reload the signin page
 		function emailVerificationStateReload() {
-			return new Promise(resolve => {
+			return new Promise((resolve, reject) => {
 				// stored the current user in cache to make sure that the currentUser doesn't change at time of pinging
 				const userId = ssAppAuth.currentUser.uid;
-				var userProfile = ssAppAuth.currentUser; 
-				window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
-				window.sessionStorage.setItem('userProfile', userProfile.displayName);
-				console.log(sessionStorage.getItem('userid'));
+				let timeOut;
 
 				let reloadInterval = setInterval(function() {
 					ssAppAuth.currentUser.reload();
@@ -89,41 +107,44 @@
 				}, Math.floor(Math.random() * 6) * 1000);
 
 				// if no emailVerified state change in 5 min reject and reload the page
-				setTimeout(function() {
+				setTimeout((function() {
 					clearInterval(reloadInterval);
-					throw new Error("No response after 5 min...");
-					reject();
-				}, 300000);
+					reject(new Error("No response after 5 min..."));
+				}), 300000)
 			})
 		}
 
 		//now saving the profile data
 		//saving works fine now, if we want to add additional fields to user"s database profile - we can add
 		//new property to the object in .set field
-		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName = 0) {
+		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName = false, joinGroupName = 0) {
 			ssAppDatabase.ref("/users/" + user.uid)
-			.set({
-				"Name": usrName,
-				"Alias": usrAlias,
-				"uniqueId": user.uid
-			})
-			.then(function() {
-				console.log("User Information Saved:", user.uid);
-			});
-			ssAppAuth.currentUser.updateProfile({
-				displayName: usrName +" : " + usrAlias, 
-			}).then(function() {
-				alert("Display name: " + ssAppAuth.currentUser.displayName);
-			});
+				.set({
+					"Name": usrName,
+					"Alias": usrAlias,
+					"uniqueId": user.uid
+				})
+				.then(function() {
+					console.log("User Information Saved:", user.uid);
+				});
 
-			
-			//temporary adding all new users to the 1 group.
-      // for group creation
-      ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(user.uid);
-			ssAppDatabase.ref("/groups/" + groupName + "/groupleader/").push(user.uid);
-      // for testing
-      ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
-			ssAppDatabase.ref("/users/"+user.uid+"/groups").set("0")
+			ssAppAuth.currentUser.updateProfile({
+				displayName: usrName + " : " + usrAlias,
+			}).then(function() {
+				// alert("Display name: " + ssAppAuth.currentUser.displayName);
+				//temporary adding all new users to the 1 group.
+				// for group creation
+				// new group created is push to groups
+				// save group name to groupName  
+
+				ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(user.uid);
+				ssAppDatabase.ref("/groups/" + groupName + "/groupleader/").push(user.uid);
+				ssAppDatabase.ref("/users/" + user.uid + "/groups").set(groupName)
+
+				// for testing purpose only
+				ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
+				ssAppDatabase.ref("/users/" + user.uid + "/groups").set("0");
+			});
 		}
 
 
@@ -133,54 +154,55 @@
 			// because using submit can trigger onclick event when user press enter
 
 			const email = $("#loginEmail").val(),
-			password = $("#loginPassword").val();
+				password = $("#loginPassword").val();
 
 			// input validation
-			validateInputValue(email, password).then(() => {
+			validateLoginInput(email, password).then(() => {
 
-        ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
-					// stop user from signing in before verifing their email
+				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
+
 					window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
 					console.log(sessionStorage.getItem('userid'));
-
+					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
 						alert("Please verified your email before proceed.");
 						ssAppAuth.signOut().then(() => {
 							window.location.reload();
 						})
 					}
-									
+
 					console.log("User signed in.", user.uid);
 					pageRedirect("/group.html");
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
 
-
 					// refresh page with erorr message indicating erorr type
 					pageRedirect(window.location.href + "#" + error.message);
 					$("input").val("");
 				});
- 			}).catch((error) => {
- 				alert(error.message);
- 			})
- 		};
+			}).catch((error) => {
+				alert(error.message);
+			})
+		};
 
 		// register account with email and password
+		// since we check the group input to be non-null before opening the modal
 		signupBtn.onclick = function(event) {
-			const email = $("#registerEmail").val(),
-			password = $("#registerPassword").val(),
-				// I add a password confirmation in the modal so that we can prevent user from typo
-				groupName = $('#loginNewGroup').val(),
+			const groupName = $('#loginNewGroup').val(),
+				joinGroupName = $('#loginJoinGroup').val(),
+				// have to figure out a better way to know which of the aboved is filled
+				email = $("#registerEmail").val(),
+				password = $("#registerPassword").val(),
 				passwordConfirmation = $("#registerPasswordConfirm").val(),
 				usrName = $("#registerName").val(),
 				usrAlias = $("#registerAlias").val();
 
 			// input validation
-			validateInputValue(email, password, passwordConfirmation).then(() => {
+			validateRegisterInput(usrName, usrAlias, email, password, passwordConfirmation).then(() => {
 				ssAppAuth.createUserWithEmailAndPassword(email, password).then(function(user) {
 					var actionCodeSettings = {
-						url: "httops://secret-santa-project.firebaseapp.com/?email=" + ssAppAuth.currentUser.email,
+						url: "https://secret-santa-project.firebaseapp.com/?email=" + ssAppAuth.currentUser.email,
 						handleCodeInApp: false
 					};
 
@@ -189,13 +211,20 @@
 
 						ssAppAuth.onAuthStateChanged(function(user) {
 							console.log(user);
-							emailVerificationStateReload().then(function(intervalId) {
-								// only store user to database after they verified their email address
+
+							// check if the user is joining or creating a group
+							if (!!groupName) {
 								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, groupName);
+							} else {
+								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, false, joinGroupName);
+							}
+
+							emailVerificationStateReload().then(function(intervalId) {
+								window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
 								clearInterval(intervalId);
 								// the group.html is a placeholder page, which we can put a "Email Confirmed !!"
 								// later into the project
-								console.log("Email Verified!!"); 
+								console.log("Email Verified!!");
 								pageRedirect("/group.html");
 
 							}).catch(function(error) {
@@ -203,7 +232,6 @@
 								window.location.reload();
 							});
 						});
-						alert("Please confirm your email address before proceed");
 					})
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
@@ -218,9 +246,10 @@
 					$("input").val("");
 				})
 			}).catch((error) => {
+				console.log('This is where I caught user info input error');
 				alert(error.message);
 			});
-		};
+		}
 
 	}(jQuery));
 
