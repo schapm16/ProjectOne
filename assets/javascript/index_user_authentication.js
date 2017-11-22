@@ -172,7 +172,7 @@
 							playerGroups = newGroupKey;
 						}
 						ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
-					})
+					});
 				}
 				
 			});
@@ -203,7 +203,7 @@
 					}
 
 					console.log("User signed in.", user.uid);
-					pageRedirect("/group.html");
+					pageRedirect("group.html");
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
@@ -258,7 +258,7 @@
 								// the group.html is a placeholder page, which we can put a "Email Confirmed !!"
 								// later into the project
 								console.log("Email Verified!!");
-								pageRedirect("/group.html");
+								pageRedirect("group.html");
 
 							}).catch(function(error) {
 								console.log(error.message);
