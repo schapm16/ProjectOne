@@ -56,7 +56,7 @@ function displayGroup(groupID) {
     $(".s6").on("click", "#goButton"+groupID, function(event){
         console.log("knock");
         sessionStorage.setItem("currentGroupId", $(event.currentTarget).attr("data-groupid"));
-        window.location.assign("/mainDashboard.html");
+        window.location.assign("mainDashboard.html");
     });
 
 }
