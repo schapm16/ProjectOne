@@ -5,12 +5,12 @@
 
 		// get buttons
 		const loginBtn = document.getElementById("loginButton"),
-		signupBtn = document.getElementById("registerButton");
+			signupBtn = document.getElementById("registerButton");
 
 		// secretsantaAppAuth = firebase.auth(ssl);
 		// secretsantaAppDatabase = firebase.database(ssl);
 		const ssAppAuth = firebase.auth(ssl),
-		ssAppDatabase = firebase.database(ssl);
+			ssAppDatabase = firebase.database(ssl);
 
 		function pageRedirect(url) {
 			window.location.assign(url);
@@ -21,21 +21,19 @@
 		function errorHandler(errorCode) {
 			switch (errorCode) {
 				case "auth/email-already-in-use":
-				alert("An account with this email address is already registered.");
-				break;
+					alert("An account with this email address is already registered.");
+					break;
 				case "auth/user-not-found":
-				alert("User with this address does not exists.");
-				break;
+					alert("User with this address does not exists.");
+					break;
 				case "auth/wrong-password":
-				alert("The password does not match the sign in address.");
-				break
+					alert("The password does not match the sign in address.");
+					break;
 				case "auth/network-request-failed":
-				alert("Request timeout.");
-				break;
-					// case ""
-				}
+					alert("Request timeout.");
+					break;
 			}
-
+		}
 		// validateInputValue caught error in account signin and registeration before pinging firebase
 		// and do something about it
 		function validateInputValue(email, password, passwordConfirmation = false) {
@@ -67,7 +65,7 @@
 			return new Promise(resolve => {
 				// stored the current user in cache to make sure that the currentUser doesn't change at time of pinging
 				const userId = ssAppAuth.currentUser.uid;
-				var userProfile = ssAppAuth.currentUser; 
+				var userProfile = ssAppAuth.currentUser;
 				window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
 				window.sessionStorage.setItem('userProfile', userProfile.displayName);
 				console.log(sessionStorage.getItem('userid'));
@@ -102,28 +100,28 @@
 		//new property to the object in .set field
 		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName = 0) {
 			ssAppDatabase.ref("/users/" + user.uid)
-			.set({
-				"Name": usrName,
-				"Alias": usrAlias,
-				"uniqueId": user.uid
-			})
-			.then(function() {
-				console.log("User Information Saved:", user.uid);
-			});
+				.set({
+					"Name": usrName,
+					"Alias": usrAlias,
+					"uniqueId": user.uid
+				})
+				.then(function() {
+					console.log("User Information Saved:", user.uid);
+				});
 			ssAppAuth.currentUser.updateProfile({
-				displayName: usrName +" : " + usrAlias, 
+				displayName: usrName + " : " + usrAlias,
 			}).then(function() {
 				alert("Display name: " + ssAppAuth.currentUser.displayName);
 			});
 
-			
+
 			//temporary adding all new users to the 1 group.
-      // for group creation
-      ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(user.uid);
+			// for group creation
+			ssAppDatabase.ref("/groups/" + groupName + "/followers/").push(user.uid);
 			ssAppDatabase.ref("/groups/" + groupName + "/groupleader/").push(user.uid);
-      // for testing
-      ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
-			ssAppDatabase.ref("/users/"+user.uid+"/groups").set("0")
+			// for testing
+			ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
+			ssAppDatabase.ref("/users/" + user.uid + "/groups").set("0")
 		}
 
 
@@ -133,12 +131,12 @@
 			// because using submit can trigger onclick event when user press enter
 
 			const email = $("#loginEmail").val(),
-			password = $("#loginPassword").val();
+				password = $("#loginPassword").val();
 
 			// input validation
 			validateInputValue(email, password).then(() => {
 
-        ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
+				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					// stop user from signing in before verifing their email
 					window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
 					console.log(sessionStorage.getItem('userid'));
@@ -149,7 +147,7 @@
 							window.location.reload();
 						})
 					}
-									
+
 					console.log("User signed in.", user.uid);
 					pageRedirect("/group.html");
 				}).catch(function(error) {
@@ -161,15 +159,15 @@
 					pageRedirect(window.location.href + "#" + error.message);
 					$("input").val("");
 				});
- 			}).catch((error) => {
- 				alert(error.message);
- 			})
- 		};
+			}).catch((error) => {
+				alert(error.message);
+			})
+		};
 
 		// register account with email and password
 		signupBtn.onclick = function(event) {
 			const email = $("#registerEmail").val(),
-			password = $("#registerPassword").val(),
+				password = $("#registerPassword").val(),
 				// I add a password confirmation in the modal so that we can prevent user from typo
 				groupName = $('#loginNewGroup').val(),
 				passwordConfirmation = $("#registerPasswordConfirm").val(),
@@ -195,7 +193,7 @@
 								clearInterval(intervalId);
 								// the group.html is a placeholder page, which we can put a "Email Confirmed !!"
 								// later into the project
-								console.log("Email Verified!!"); 
+								console.log("Email Verified!!");
 								pageRedirect("/group.html");
 
 							}).catch(function(error) {
