@@ -56,14 +56,14 @@
     background-color: #12C644;
 }
 
-.modal {
+#registerModal {
     min-height: 75%;
 }
 
-.modal #registerButton {
+.modal .btn {
     background-color: #C51613;
 }
 
-.modal #registerButton:hover {
+.modal .btn:hover {
     background-color: #12C644;
 }

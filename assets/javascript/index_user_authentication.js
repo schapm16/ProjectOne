@@ -21,19 +21,23 @@
 		function errorHandler(errorCode) {
 			switch (errorCode) {
 				case "auth/email-already-in-use":
-					alert("An account with this email address is already registered.");
+					// alert("An account with this email address is already registered.");
+					messageModal("email-already-used");
 					break;
 				case "auth/user-not-found":
-					alert("User with this address does not exists.");
+					// alert("User with this address does not exists.");
+					messageModal("user-not-found");
 					break;
 				case "auth/wrong-password":
-					alert("The password does not match the sign in address.");
-					break
+					// alert("The password does not match the sign in address.");
+					messageModal("password-incorrect")
+					break;
 				case "auth/network-request-failed":
-					alert("Request timeout.");
+					// alert("Request timeout.");
 					break;
 			}
 		}
+
 
 		// validateRegisterInput caught error in account signin and registeration before pinging firebase
 		// and do something about it
@@ -48,20 +52,24 @@
 				}
 
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
+					messageModal("invalid-email");
 					throw new Error("invalid email input");
 				}
 
 				if (password.length < 8) {
+					messageModal("password-length");
 					throw new Error("password must be at least 8 characters long");
 				}
 
 				// could add another check for password pattern
 				if (!!passwordConfirmation && passwordConfirmation !== password) {
+					messageModal("password-match");
 					throw new Error("password unmatch, please confirm your password");
 				}
 				resolve();
 			});
 		}
+
 
 
 		// validateRegisterInput caught error in account signin and registeration before pinging firebase
@@ -76,7 +84,7 @@
 				if (password.length < 8 && password.length > 0) {
 					throw new Error("wrong password!!");
 					// reject();
-				} else {
+				} else if (password.length < 0) {
 					throw new Error("don't forget to fill your password!!");
 				}
 
@@ -156,7 +164,6 @@
 		loginBtn.onclick = function(event) {
 			// perhaps instead of using button, an input[type="submit"] might be better
 			// because using submit can trigger onclick event when user press enter
-
 			const email = $("#loginEmail").val(),
 				password = $("#loginPassword").val();
 
@@ -182,12 +189,14 @@
 					errorHandler(error.code);
 
 					// refresh page with erorr message indicating erorr type
-					pageRedirect(window.location.href + "#" + error.message);
-					$("input").val("");
+					// pageRedirect(window.location.href + "#" + error.message);
+					$("#registerPassword").val("");
+					$("#registerPasswordConfirm").val("");
 				});
 			}).catch((error) => {
-				alert(error.message);
-			})
+				console.log(error.message);
+				$('#loginPassword').val("");
+			});
 		};
 
 		// register account with email and password
@@ -251,9 +260,9 @@
 				})
 			}).catch((error) => {
 				console.log('This is where I caught user info input error');
-				alert(error.message);
+				console.log(error.message);
 			});
-		}
+		};
 
 	}(jQuery));
 

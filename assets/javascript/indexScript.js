@@ -1,6 +1,49 @@
 /* global $ */
+function messageModal(errorType) {
+    switch (errorType) {
+        //Registration Errors
+        case "email-already-used":
+            $("#message").text("This email address is already registered to an account.");
+            $("#messageModal").modal("open");
+            break;
+
+        case "invalid-email":
+            $("#message").text("The email address entered is invalid.");
+            $("#messageModal").modal("open");
+            break;
+
+        case "password-length":
+            $("#message").text("Password must be at least 8 characters.");
+            $("#messageModal").modal("open");
+            break;
+
+        case "password-match":
+            $("#message").text("The passwords entered do not match.");
+            $("#messageModal").modal("open");
+            break;
+
+            //Login Errors
+        case "user-not-found":
+            $("#message").text("The email address provided is not registered to an existing account.");
+            $("#messageModal").modal("open");
+            break;
+
+        case ("password-incorrect"):
+            $("#message").text("The password entered is incorrect.");
+            $("#messageModal").modal("open");
+            break;
+    }
+}
+
 
 $(document).ready(function() {
+
+    // Initialize registerModal
+    $('.modal').modal();
+    const ssAppDatabase = firebase.database(ssl);
+
+    checkIfThisIsAnInvitation();
+
     // this function will check if the user have filled out the group name
     // if not stop action
     function groupNameMustBeFilledAndChecked(groupName = false, joinGroupName = false) {
@@ -46,15 +89,13 @@ $(document).ready(function() {
         return;
     }
 
-    // Initialize registerModal
-    $('.modal').modal();
+    // exit modal
+    $("#acknowledgeButton").click(function() {
+        $("#messageModal").modal("close");
+    });
 
-    const ssAppDatabase = firebase.database(ssl);
-
-    checkIfThisIsAnInvitation();
 
     $("#startRegisterButton").click(function() {
-
         var joinGroupName = $("#loginJoinGroup").val();
         var createGroupName = $("#loginNewGroup").val();
 
@@ -66,7 +107,6 @@ $(document).ready(function() {
         }).catch((error) => {
             alert(error.message);
         })
-
     });
 
 });
