@@ -3,6 +3,11 @@ console.log("main script.js connected")
 var db = firebase.database(ssl);
 
 $(document).ready(function() {
+    $(".s6").on("click", ".goButton", function(){
+        console.log("knok")
+        window.location.assign("/mainDashboard.html");
+    });
+
     var auth = sessionStorage.getItem("userid");
     console.log("Session uID:" + auth);
 
@@ -14,6 +19,13 @@ $(document).ready(function() {
             $(document).on("click", "#" + element, function() {
                 shuffleMemberList(element);
             });
+            db.ref("groups/"+element+"/groupleader").once("value", function(snap){
+                console.log("Groupleader: "+snap.val());
+                if(auth==snap.val()){
+                    $("#"+element).removeClass("hide");
+                    $("#"+element+"email").removeClass("hide");
+                }
+            })
         });
     });
 });
@@ -24,11 +36,14 @@ function displayGroup(groupID) {
     group.append($("<h3 class='center'>"));
     group.append($("<h5>").html(" <span id='member-count" + groupID + "'> </span>"));
     group.append($("<ul class='collection' id='member-list" + groupID + "'>"));
-    group.append("<a class='waves-effect waves-light btn' id='" + groupID + "'><i class='material-icons left'>ac_unit</i>Start</a>");
-    group.append("<a class='waves-effect waves-light btn emailbtn' data-target='emailForm" + groupID + "'><i class='material-icons left'>email</i>Add</a>");
+    //keeps "hide" class until until user is groupleader
+    group.append("<a class='waves-effect waves-light btn hide' id='" + groupID + "'><i class='material-icons left'>ac_unit</i>Start</a>");
+    group.append("<a class='waves-effect waves-light btn emailbtn hide' id='" + groupID + "email' data-target='emailForm" + groupID + "'><i class='material-icons left'>email</i>Add</a>");
     form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
+    group.append("<a class='waves-effect waves-light btn goButton'>Go!</a>");
+
     $(".s6").append(group);
     $(".s6").append(form);
 }
