@@ -17,7 +17,7 @@
 		sendInviteBtn.onclick = function(event) {
 			event.preventDefault();
 			const email = $('#user-email').val(),
-				url = 'http://localhost:8000/test_group_invite_link.html#' + thisIsTheGroupNameAssociatedToUser,
+				url = 'http://localhost:8000/index.html#' + thisIsTheGroupNameAssociatedToUser,
 				// url = 'https%3A%2F%2Fwww.google.com%0A',
 				emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!"
 				console.log(url);
