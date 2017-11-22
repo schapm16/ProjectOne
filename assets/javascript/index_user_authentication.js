@@ -2,7 +2,6 @@
 	"use strict";
 
 	(function userAuthentication($) {
-
 		// get buttons
 		const loginBtn = document.getElementById("loginButton"),
 			// startRegisterBtn = document.getElementById("startRegisterButton"),
@@ -40,20 +39,25 @@
 		// and do something about it
 		function validateRegisterInput(userName, alias, email, password, passwordConfirmation = false) {
 			return new Promise(resolve => {
+				if (!userName) {
+					throw new Error('please give us your name, otherwise no one will know who you are');
+				}
+
+				if (!alias) {
+					throw new Error('alias is great for hiding who you really are.');
+				}
 
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
 					throw new Error("invalid email input");
-					// reject();
 				}
 
 				if (password.length < 8) {
 					throw new Error("password must be at least 8 characters long");
-					// reject();
 				}
+
 				// could add another check for password pattern
 				if (!!passwordConfirmation && passwordConfirmation !== password) {
 					throw new Error("password unmatch, please confirm your password");
-					// reject();
 				}
 				resolve();
 			});

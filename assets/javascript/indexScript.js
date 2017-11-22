@@ -46,7 +46,6 @@ $(document).ready(function() {
         return;
     }
 
-
     // Initialize registerModal
     $('.modal').modal();
 
