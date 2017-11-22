@@ -146,12 +146,12 @@ $(document).ready(function() {
         return;
     }
 
+
     // exit modal
     $("#acknowledgeButton").click(function() {
         $("#messageModal").modal("close");
         $("#registerModal input").val("");
     });
-
 
     $("#startRegisterButton").click(function() {
         var joinGroupName = $("#loginJoinGroup").val();
