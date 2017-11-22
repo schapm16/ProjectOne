@@ -74,8 +74,6 @@ $(document).ready(function() {
         $("#giftIdea").val("");
     });
 
-
-
     // Function to make Walmart API call and Display Results
     function walmartAPI(searchTerm) {
         // var priceRange = 40;
@@ -160,7 +158,6 @@ $(document).ready(function() {
                 $('.carousel').carousel();
         });
     }
-
 
     // Product Display Carousel on partner gift idea "chip" click
     var store = "walmart";
