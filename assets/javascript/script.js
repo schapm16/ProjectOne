@@ -45,13 +45,14 @@ function displayGroup(groupID) {
     form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
-    group.append("<a class='waves-effect waves-light btn hide' id='goButton"+groupID+"'>Go!</a>");
+    group.append("<a class='waves-effect waves-light btn hide' id='goButton"+groupID+"'  data-groupId='"+groupID+"'>Go!</a>");
 
     $(".s6").append(group);
     $(".s6").append(form);
 
-    $(".s6").on("click", "#goButton"+groupID, function(){
-        console.log("knok")
+    $(".s6").on("click", "#goButton"+groupID, function(event){
+        console.log("knock");
+        sessionStorage.setItem("currentGroupId", $(event.currentTarget).attr("data-groupid"));
         window.location.assign("/mainDashboard.html");
     });
 
