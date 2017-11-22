@@ -50,10 +50,10 @@ function displayGroup(groupID) {
     form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
-    group.append("<a class='waves-effect waves-light btn hide' id='goButton"+groupID+"'  data-groupId='"+groupID+"'>Go!</a>");
+    group.append("<a class='waves-effect waves-light btn hide' id='goButton" + groupID + "'  data-groupId='" + groupID + "'>Go!</a>");
     $(".s6").append(group);
     $(".s6").append(form);
-    $(".s6").on("click", "#goButton"+groupID, function(event){
+    $(".s6").on("click", "#goButton" + groupID, function(event) {
         console.log("knock");
         sessionStorage.setItem("currentGroupId", $(event.currentTarget).attr("data-groupid"));
         window.location.assign("mainDashboard.html");
@@ -78,12 +78,13 @@ $(document).click(function(event) {
         console.log(targetForm);
         $(document.getElementById(targetForm)).toggleClass("scale-out").toggleClass("scale-in");
 
-        const groupId = targetForm.replace(/\bemailForm/, ""),
-            inviteEmail = $('#inviteEmail').val();
+        const groupId = targetForm.replace(/\bemailForm/, "");
+
 
         document.querySelector('#inviteEmailButton').onclick = function() {
             const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
-                emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!"
+                emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
+                inviteEmail = $('#inviteEmail').val();
             console.log(url);
             console.log(emailContent);
 
