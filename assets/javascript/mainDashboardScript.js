@@ -1,14 +1,15 @@
 /*global firebase $*/
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
-var userId = 1;
+var userID = 1;
+var partnerID = false;
 var groupId = 1;
+var userItemsInDB = 0;
+var partnerItemsInDB = false;
 
 var db = firebase.database();
-var userItemsInDB = db.ref("/groups/" + groupId + "/followers/" + userId + "/items");
 
 function addNewIdeaChip(ideaName) {
-    console.log(ideaName);
-    userItemsInDB.child(ideaName).set(0);
+    console.log("Your's idea: "+ideaName);
     var newIdea = $("<div>").addClass("chip close");
     var close = $("<i>").addClass("material-icons close");
     newIdea.attr("data-name", ideaName);
@@ -18,29 +19,58 @@ function addNewIdeaChip(ideaName) {
     $("#yourGiftIdeas").append(newIdea);
 }
 
+function displayPartnerIdeaChip(ideaName){
+    console.log("Partner's idea: "+ideaName);
+    var newIdea = $("<div class='chip'>").text(ideaName);
+    $("#partnerGiftIdeas").append(newIdea);
+}
+
 $(document).ready(function() {
     //Adding user's personal preference
-    var userID = sessionStorage.getItem('userid');
-    console.log("userID: "+userID)
+    userID = sessionStorage.getItem('userid');
+    console.log("userID: "+userID);
+    userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID);
+
+    //get partner's id
+    db.ref("/groups/" + groupId + "/followers/" + userID)
+    .once("value",function(snapshot){
+        partnerID = snapshot.val();
+        console.log(partnerID);
+        //display partner name and items
+        partnerItemsInDB =  db.ref("/groups/" + groupId + "/giftideas/" + partnerID);
+
+        //display partner name
+        db.ref("/users/"+ partnerID).once("value", function(snap){
+        $(".partner").text(snap.val().Name);
+        });
+
+        partnerItemsInDB.on('child_added', function(snap) {
+        console.log(snap.key);
+        displayPartnerIdeaChip(snap.key);
+        });
+    });
+
+    //display username
     db.ref("/users/"+ userID).once("value", function(snap){
         $(".userName").text(snap.val().Name);
     });
-
-    userItemsInDB
-    .on('child_added', function(snap) {
+    //display user's gift ideas
+    userItemsInDB.on('child_added', function(snap) {
         console.log(snap.key);
         addNewIdeaChip(snap.key);
     });
+    
+    db.ref("/groups/"+ groupId)
+
     //Removing element from HTML, and database
     $("#yourGiftIdeas").on("click", ".material-icons.close", function(event) {
         var par = $(event.target).parent().attr("data-name");
         userItemsInDB.child(par).remove();
     });
-
+    //adding element to DOM, and database
     $("#giftIdeaButton").click(function() {
         var text = $("#giftIdea").val();
-        userItemsInDB.child(text).set(0);
-
+        userItemsInDB.child(text).set(text);
         $("#giftIdea").val("");
     });
 
@@ -86,7 +116,6 @@ $(document).ready(function() {
                 $('.carousel').carousel();
             });
         }
-
 
     //Function to make Ebay API call and Display Results
     function ebayAPI(searchTerm) {
