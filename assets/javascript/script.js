@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     $(".s6").on("click", ".goButton", function() {
         console.log("knok")
-        window.location.assign("/mainDashboard.html");
+        window.location.assign("mainDashboard.html");
     });
 
     var auth = sessionStorage.getItem("userid");
@@ -71,6 +71,7 @@ function displayGroup(groupID) {
 //     }
 // });
 
+
 $(document).click(function(event) {
     if ($(event.target).hasClass('emailbtn')) {
         var targetForm = $(event.target).attr("data-target");
@@ -115,6 +116,7 @@ function displayGroupMembers(groupId) {
         $("#member-count" + groupID).text("Secret Santas: " + $("#member-list" + groupID + " li").length);
     }
 }
+
 
 function shuffleMemberList(groupName) {
     // Fisher-Yates shuffling algorithm

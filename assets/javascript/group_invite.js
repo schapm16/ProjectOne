@@ -43,6 +43,12 @@
 					throw new Error("invalid email input");
 					reject();
 				}
+
+				if (!passwordConfirmation && password.length < 8) {
+					throw new Error("wrong password!!");
+					reject();
+				}
+
 				if (password.length < 8) {
 					throw new Error("password must be at least 8 characters long");
 					reject();
@@ -146,11 +152,12 @@
 								console.log("Email Verified!!");
 								pageRedirect("/group.html");
 							}).catch(function(error) {
+								alert('I caught it!!');
 								alert(error.message);
 								window.location.reload();
 							});
 						});
-						alert("Please confirm your email address before proceed");
+						// alert("Please confirm your email address before proceed");
 					})
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);

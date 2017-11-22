@@ -25,45 +25,15 @@
     
 }
 
-.card {
-    border-radius: 20px;
-}
-.card-content {
-    overflow: hidden;
-}
-
-
-.input-field input:focus + label {
-    color: #000 !important;
-}
-
-.input-field input:focus {
-    border-bottom: 1px solid #000 !important;
-    box-shadow: none !important;
-}
-
-
-.btn-floating {
+.btn, .btn-floating {
     background-color: #C51613;
 }
 
 
-.btn-floating:focus {
+.btn:focus, .btn-floating:focus {
     background-color: #C51613;
 }
 
-.btn-floating:hover {
-    background-color: #12C644;
-}
-
-#registerModal {
-    min-height: 75%;
-}
-
-.modal .btn {
-    background-color: #C51613;
-}
-
-.modal .btn:hover {
+.btn:hover, .btn-floating:hover {
     background-color: #12C644;
 }

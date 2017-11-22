@@ -1,14 +1,15 @@
 /*global firebase $*/
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
-var userId = 1;
-var groupId = 1;
+var userID = 1;
+var partnerID = false;
+var groupId = window.sessionStorage.getItem('currentGroupId');
+var userItemsInDB = 0;
+var partnerItemsInDB = false;
 
 var db = firebase.database();
-var userItemsInDB = db.ref("/groups/" + groupId + "/followers/" + userId + "/items");
 
 function addNewIdeaChip(ideaName) {
-    console.log(ideaName);
-    userItemsInDB.child(ideaName).set(0);
+    console.log("Your's idea: "+ideaName);
     var newIdea = $("<div>").addClass("chip close");
     var close = $("<i>").addClass("material-icons close");
     newIdea.attr("data-name", ideaName);
@@ -18,40 +19,68 @@ function addNewIdeaChip(ideaName) {
     $("#yourGiftIdeas").append(newIdea);
 }
 
+function displayPartnerIdeaChip(ideaName){
+    console.log("Partner's idea: "+ideaName);
+    var newIdea = $("<div class='chip'>").text(ideaName);
+    $("#partnerGiftIdeas").append(newIdea);
+}
+
 $(document).ready(function() {
     //Adding user's personal preference
-    var userID = sessionStorage.getItem('userid');
-    console.log("userID: "+userID)
+    userID = sessionStorage.getItem('userid');
+    console.log("userID: "+userID);
+    userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID);
+
+    //get partner's id
+    db.ref("/groups/" + groupId + "/FollowersTest/" + userID)
+    .once("value",function(snapshot){
+        partnerID = snapshot.val();
+        console.log("PartnerID: "+partnerID);
+        //display partner name and items
+        partnerItemsInDB =  db.ref("/groups/" + groupId + "/giftideas/" + partnerID);
+
+        //display partner name
+        db.ref("/users/"+ partnerID).once("value", function(snap){
+        $(".partner").text(snap.val().Name);
+        });
+
+        partnerItemsInDB.on('child_added', function(snap) {
+        console.log(snap.key);
+        displayPartnerIdeaChip(snap.key);
+        });
+    });
+
+    //display username
     db.ref("/users/"+ userID).once("value", function(snap){
         $(".userName").text(snap.val().Name);
     });
-
-    userItemsInDB
-    .on('child_added', function(snap) {
+    //display user's gift ideas
+    userItemsInDB.on('child_added', function(snap) {
         console.log(snap.key);
         addNewIdeaChip(snap.key);
     });
+    
+    db.ref("/groups/"+ groupId)
+
     //Removing element from HTML, and database
     $("#yourGiftIdeas").on("click", ".material-icons.close", function(event) {
         var par = $(event.target).parent().attr("data-name");
         userItemsInDB.child(par).remove();
     });
-
+    //adding element to DOM, and database
     $("#giftIdeaButton").click(function() {
         var text = $("#giftIdea").val();
-        userItemsInDB.child(text).set(0);
-
+        userItemsInDB.child(text).set(text);
         $("#giftIdea").val("");
     });
 
     // Function to make Walmart API call and Display Results
     function walmartAPI(searchTerm) {
-        var priceRange = 40;
+        // var priceRange = 40;
 
         var key = "bznsyj8ykctspk7c3fr4swkz";
         var url = "https://api.walmartlabs.com/v1/search?";
         
-        //Walmart Carousel
         $.ajax({
             url: url,
             method: "GET",
@@ -86,7 +115,6 @@ $(document).ready(function() {
             });
         }
 
-
     //Function to make Ebay API call and Display Results
     function ebayAPI(searchTerm) {
         var key = "StephenC-SecretSa-PRD-6132041a0-943144c9";
@@ -107,11 +135,31 @@ $(document).ready(function() {
             
         }).done(function(result) {
             console.log(result);
+            
+            var short = result.findItemsByKeywordsResponse[0].searchResult[0];
+            
+            for (var i = 0; i < 10; i++) {
+                    var newImg = $("<img>");
+                    newImg.attr("src", short.item[i].galleryURL[0]);
+                    var Paragraph = $("<p>");
+                    Paragraph.text("Item" + i + ": $" + short.item[i].sellingStatus[0].currentPrice[0].__value__);
+                    var caruItem = $("<a id=img" + i + ">");
+                    caruItem.attr("class", 'carousel-item center-align');
+                    caruItem.attr("target", "_blank");
+                    caruItem.attr("href", short.item[i].viewItemURL[0]);
+                    caruItem.append(newImg);
+                    caruItem.append(Paragraph);
+                    $("#productDisplay").append(caruItem);
+                    $("#img" + i).hammer();
+                    $("#img" + i).on("tap", function() {
+                        window.open($(this).attr("href"), '_blank');
+                    });
+                }
+                $('.carousel').carousel();
         });
     }
 
     // Product Display Carousel on partner gift idea "chip" click
-    
     var store = "walmart";
     var searchTerm;
     
@@ -123,7 +171,17 @@ $(document).ready(function() {
         walmartAPI(searchTerm);
     }
 });
-    
+   
+    $("#signOut").click(function(){
+        sessionStorage.setItem("userid", "");
+        window.location.assign("index.html");
+    });
+     $("#switchGroup").click(function(){
+        window.location.assign("group.html");
+    });
+
+
+
     $(document).on("click","#ebay", function() {
         if (store !== "ebay") {
             $('.carousel').carousel('destroy');
