@@ -20,20 +20,6 @@
 		function errorHandler(errorCode) {
 			switch (errorCode) {
 				case "auth/email-already-in-use":
-<<<<<<< HEAD
-					alert("An account with this email address is already registered.");
-					break;
-				case "auth/user-not-found":
-					alert("User with this address does not exists.");
-					break;
-				case "auth/wrong-password":
-					alert("The password does not match the sign in address.");
-					break
-				case "auth/network-request-failed":
-					alert("Request timeout.");
-					break;
-					// case ""
-=======
 					// alert("An account with this email address is already registered.");
 					messageModal("email-already-used");
 					break;
@@ -48,7 +34,6 @@
 				case "auth/network-request-failed":
 					// alert("Request timeout.");
 					break;
->>>>>>> f4fc5fdd879af6596ab95a77160dba7f0532c8ca
 			}
 		}
 
@@ -116,13 +101,6 @@
 			return new Promise((resolve, reject) => {
 				// stored the current user in cache to make sure that the currentUser doesn't change at time of pinging
 				const userId = ssAppAuth.currentUser.uid;
-<<<<<<< HEAD
-				var userProfile = ssAppAuth.currentUser;
-				window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
-				window.sessionStorage.setItem('userProfile', userProfile.displayName);
-				console.log(sessionStorage.getItem('userid'));
-=======
->>>>>>> f4fc5fdd879af6596ab95a77160dba7f0532c8ca
 
 				let reloadInterval = setInterval(function() {
 					ssAppAuth.currentUser.reload();
@@ -161,10 +139,7 @@
 				.then(function() {
 					console.log("User Information Saved:", user.uid);
 				});
-<<<<<<< HEAD
-=======
 
->>>>>>> f4fc5fdd879af6596ab95a77160dba7f0532c8ca
 			ssAppAuth.currentUser.updateProfile({
 				displayName: usrName + " : " + usrAlias,
 			}).then(function() {
@@ -207,22 +182,6 @@
 				}
 				
 			});
-
-<<<<<<< HEAD
-			//temporary adding all new users to the 1 group.
-			// for group creation
-			const groupKey = ssAppDatabase.ref("/groups/").push(true).key,
-				userId = user.uid;
-
-			ssAppDatabase.ref("/groups/" + groupKey + "/groupName/").set(groupName);
-			ssAppDatabase.ref("/groups/" + groupKey + "/followers/").push(userId);
-			ssAppDatabase.ref("/groups/" + groupKey + "/groupleader/").set(userId);
-			ssAppDatabase.ref("/users/" + userId + "/groups").set(groupKey);
-			// for testing
-			ssAppDatabase.ref("/groups/" + 0 + "/followers/").push(user.uid);
-			ssAppDatabase.ref("/users/" + user.uid + "/groups").set("0");
-=======
->>>>>>> f4fc5fdd879af6596ab95a77160dba7f0532c8ca
 		}
 
 
@@ -238,11 +197,6 @@
 
 				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 
-<<<<<<< HEAD
-				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
-					// stop user from signing in before verifing their email
-=======
->>>>>>> f4fc5fdd879af6596ab95a77160dba7f0532c8ca
 					window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
 					console.log(sessionStorage.getItem('userid'));
 					// stop user from signing in before verifing their email
@@ -265,31 +219,19 @@
 
 				});
 			}).catch((error) => {
-<<<<<<< HEAD
-				alert(error.message);
-			})
-=======
 				console.log(error.message);
 				$('#loginPassword').val("");
 			});
->>>>>>> f4fc5fdd879af6596ab95a77160dba7f0532c8ca
 		};
 
 		// register account with email and password
 		// since we check the group input to be non-null before opening the modal
 		signupBtn.onclick = function(event) {
-<<<<<<< HEAD
-			const email = $("#registerEmail").val(),
-				password = $("#registerPassword").val(),
-				// I add a password confirmation in the modal so that we can prevent user from typo
-				groupName = $('#loginNewGroup').val(),
-=======
 			const groupName = $('#loginNewGroup').val(),
 				joinGroupName = $('#loginJoinGroup').val(),
 				// have to figure out a better way to know which of the aboved is filled
 				email = $("#registerEmail").val(),
 				password = $("#registerPassword").val(),
->>>>>>> f4fc5fdd879af6596ab95a77160dba7f0532c8ca
 				passwordConfirmation = $("#registerPasswordConfirm").val(),
 				usrName = $("#registerName").val(),
 				usrAlias = $("#registerAlias").val();
@@ -322,11 +264,7 @@
 								// the group.html is a placeholder page, which we can put a "Email Confirmed !!"
 								// later into the project
 								console.log("Email Verified!!");
-<<<<<<< HEAD
-								pageRedirect("/group.html");
-=======
 								pageRedirect("group.html");
->>>>>>> f4fc5fdd879af6596ab95a77160dba7f0532c8ca
 
 							}).catch(function(error) {
 								console.log(error.message);
