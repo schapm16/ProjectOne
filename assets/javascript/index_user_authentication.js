@@ -41,10 +41,12 @@
 		function validateRegisterInput(userName, alias, email, password, passwordConfirmation) {
 			return new Promise(resolve => {
 				if (!userName) {
+					messageModal("name-blank");
 					throw new Error('please give us your name, otherwise no one will know who you are');
 				}
 
 				if (!alias) {
+					messageModal("alias-blank");
 					throw new Error('alias is great for hiding who you really are.');
 				}
 
@@ -60,7 +62,7 @@
 
 				// could add another check for password pattern
 				if (passwordConfirmation !== password) {
-					messageModal("password-match");
+					messageModal("password-mismatch");
 					throw new Error("password unmatch, please confirm your password");
 				}
 				resolve();
@@ -74,12 +76,16 @@
 		function validateLoginInput(email, password) {
 			return new Promise(resolve => {
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
+					messageModal("invalid-email");
 					throw new Error("invalid email input");
-				}
+				
 
-				if (password.length < 8 && password.length > 0) {
-					throw new Error("wrong password!!");
+				// if (password.length < 8 && password.length > 0) {
+				// 	messageModal("password-incorrect");
+				// 	throw new Error("wrong password!!");
+				// 	// reject();
 				} else if (password.length <= 0) {
+					messageModal("password-blank");
 					throw new Error("don't forget to fill your password!!");
 				}
 
@@ -240,7 +246,8 @@
 					};
 
 					ssAppAuth.currentUser.sendEmailVerification().then(function() {
-						alert("Email Verification Sent!");
+						console.log("Email Verification Sent!");
+						messageModal("email-verification-sent");
 
 						ssAppAuth.onAuthStateChanged(function(user) {
 							console.log(user);
