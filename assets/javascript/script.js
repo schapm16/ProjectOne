@@ -3,6 +3,7 @@ console.log("main script.js connected")
 var db = firebase.database(ssl);
 
 $(document).ready(function() {
+
     $(".s6").on("click", ".goButton", function() {
         console.log("knok")
         window.location.assign("/mainDashboard.html");
@@ -18,6 +19,7 @@ $(document).ready(function() {
             displayGroupMembers(element);
             $(document).on("click", "#" + element, function() {
                 shuffleMemberList(element);
+                $("#goButton" + element).removeClass("hide");
             });
             db.ref("groups/" + element + "/groupleader").once("value", function(snap) {
                 console.log("Groupleader: " + snap.val());
@@ -25,10 +27,16 @@ $(document).ready(function() {
                     $("#" + element).removeClass("hide");
                     $("#" + element + "email").removeClass("hide");
                 }
-            })
+            });
+            db.ref("groups/" + element + "/FollowersTest").once('value', function(snap) {
+                if (snap.val() != null) {
+                    $("#goButton" + element).removeClass("hide");
+                }
+            });
         });
     });
 });
+
 
 function displayGroup(groupID) {
     var group = $("<div class='group-item' id='group-" + groupID + "'>");
@@ -42,19 +50,47 @@ function displayGroup(groupID) {
     form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
-    group.append("<a class='waves-effect waves-light btn goButton'>Go!</a>");
+    group.append("<a class='waves-effect waves-light btn hide' id='goButton" + groupID + "'>Go!</a>");
 
     $(".s6").append(group);
     $(".s6").append(form);
+
+    $(".s6").on("click", "#goButton" + groupID, function() {
+        console.log("knok")
+        window.location.assign("/mainDashboard.html");
+    });
+
 }
 
 // displayGroup("Group One", 0);
+
+// $(document).click(function(event) {
+//     if ($(event.target).hasClass('emailbtn')) {
+//         var targetForm = $(event.target).attr("data-target");
+//         console.log(targetForm);
+//         $(document.getElementById(targetForm)).toggleClass("scale-out").toggleClass("scale-in");
+//     }
+// });
 
 $(document).click(function(event) {
     if ($(event.target).hasClass('emailbtn')) {
         var targetForm = $(event.target).attr("data-target");
         console.log(targetForm);
         $(document.getElementById(targetForm)).toggleClass("scale-out").toggleClass("scale-in");
+
+        const groupId = targetForm.replace(/\bemailForm/, ""),
+            inviteEmail = $('#inviteEmail').val();
+
+        if (inviteEmail) {
+            document.getElementById('inviteEmailButton').onclick = function() {
+                const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
+                    emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!"
+                console.log(url);
+                console.log(emailContent);
+
+                window.open("mailto:" + email + "?subject=" + "Cool Secret Santa Game" + "&body=" + emailContent);
+            }
+        }
     }
 });
 
@@ -143,26 +179,3 @@ function shuffleMemberList(groupName) {
         ssAppDatabse.ref('/groups/' + groupName + '/FollowersTest/').set(makePairs(shuffledList));
     });
 }
-
-
-$(document).click(function(event) {
-    if ($(event.target).hasClass('emailbtn')) {
-        var targetForm = $(event.target).attr("data-target");
-        console.log(targetForm);
-        $(document.getElementById(targetForm)).toggleClass("scale-out").toggleClass("scale-in");
-
-        const groupId = targetForm.replace(/\bemailForm/, ""),
-            inviteEmail = $('#inviteEmail').val();
-
-        if (inviteEmail) {
-            document.getElementById('inviteEmailButton').onclick = function() {
-                const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
-                    emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!"
-                console.log(url);
-                console.log(emailContent);
-
-                window.open("mailto:" + email + "?subject=" + "Cool Secret Santa Game" + "&body=" + emailContent);
-            }
-        }
-    }
-});
