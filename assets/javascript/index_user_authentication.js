@@ -11,7 +11,9 @@
 		const ssAppAuth = firebase.auth(ssl),
 			ssAppDatabase = firebase.database(ssl);
 
-		function pageRedirect(url) {
+		function redirectAndStoreUserToSession(url, userId, consoleMessage) {
+			window.sessionStorage.setItem('userid', userId);
+			console.log(consoleMessage);
 			window.location.assign(url);
 		}
 
@@ -41,45 +43,44 @@
 		function validateRegisterInput(userName, alias, email, password, passwordConfirmation) {
 			return new Promise(resolve => {
 				if (!userName) {
-					messageModal("name-blank");
-					throw new Error('please give us your name, otherwise no one will know who you are');
+					// messageModal("name-blank");
+					throw new Error("name-blank");
 				}
 
 				if (!alias) {
-					messageModal("alias-blank");
-					throw new Error('alias is great for hiding who you really are.');
+					// messageModal("alias-blank");
+					throw new Error("alias-blank");
 				}
 
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
-					messageModal("invalid-email");
-					throw new Error("invalid email input");
+					// messageModal("invalid-email");
+					throw new Error("invalid-email");
 				}
 
 				if (password.length < 8) {
-					messageModal("password-length");
-					throw new Error("password must be at least 8 characters long");
+					// messageModal("password-length");
+					throw new Error("password-length");
 				}
 
 				// could add another check for password pattern
 				if (passwordConfirmation !== password) {
-					messageModal("password-mismatch");
-					throw new Error("password unmatch, please confirm your password");
+					// messageModal("password-mismatch");
+					throw new Error("password-mismatch");
 				}
 				resolve();
 			});
 		}
-
 
 		// validateRegisterInput caught error in account signin and registeration before pinging firebase
 		// and do something about it
 		function validateLoginInput(email, password) {
 			return new Promise(resolve => {
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
-					messageModal("invalid-email");
-					throw new Error("invalid email input");
+					// messageModal("invalid-email");
+					throw new Error("invalid-email");
 				} else if (password.length <= 0) {
-					messageModal("password-blank");
-					throw new Error("don't forget to fill your password!!");
+					// messageModal("password-blank");
+					throw new Error("password-blank");
 				}
 				resolve();
 			});
@@ -93,7 +94,6 @@
 			return new Promise((resolve, reject) => {
 				// stored the current user in cache to make sure that the currentUser doesn't change at time of pinging
 				const userId = ssAppAuth.currentUser.uid;
-
 				let reloadInterval = setInterval(function() {
 					ssAppAuth.currentUser.reload();
 					console.log(ssAppAuth.currentUser.emailVerified);
@@ -101,7 +101,6 @@
 
 					if (ssAppAuth.currentUser.uid !== userId) {
 						throw new Error("The current user online is unfortunately, not you. The page will reload now.");
-						// reject();
 					}
 
 					if (ssAppAuth.currentUser.emailVerified) {
@@ -121,6 +120,8 @@
 		//now saving the profile data
 		//saving works fine now, if we want to add additional fields to user"s database profile - we can add
 		//new property to the object in .set field
+
+		// need to be promise
 		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName = false, joinGroupName = false) {
 			ssAppDatabase.ref("/users/" + user.uid)
 				.set({
@@ -135,8 +136,49 @@
 			ssAppAuth.currentUser.updateProfile({
 				displayName: usrName + " : " + usrAlias,
 			}).then(function() {
+				logPlayerToGroup(user, groupName, joinGroupName).then(() => {
+					resolve();
+				}).catch((error) => {
+					reject(error);
+				})
+			});
+		}
 
-				// if the player is not creating new group
+		// still have uncaught
+		function userJoinOrCreateNewGroup(user, groupName = false, joinGroupName = false) {
+			return new Promise((resolve, reject) => {
+				if (!!groupName && !!joinGroupName) {
+					// messageModal("create-join-both");
+					throw new Error("create-join-both");
+				}
+				logPlayerToGroup(user, groupName, joinGroupName).then(() => {
+					resolve();
+				}).catch((error) => {
+					reject(error);
+				})
+			})
+		}
+
+		// need more testing 
+		// this is a helper function to reduce repetition	
+		function logPlayerToGroup(user, groupName, joinGroupName) {
+			// helper function check if player already join the group before setting it to group
+			function setPlayerGroups(snapshot, groupKey, userId) {
+				let playerGroups, notJoined = false,
+					groupString = snapshot.val();
+				if (!!groupString) {
+					const groupArray = groupString.split(",");
+					groupArray.indexOf(groupKey) !== -1 ? playerGroups = groupString :
+						playerGroups = groupString + "," + groupKey;
+					notJoined = true;
+				} else {
+					playerGroups = groupKey;
+				}
+				ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
+				return notJoined;
+			}
+
+			return new Promise((resolve, reject) => {
 				if (!groupName) {
 					let playerGroups, groupKey, userId = user.uid;
 					ssAppDatabase.ref("/groups/GroupsOnline/").once("value").then((snapshot) => {
@@ -144,48 +186,67 @@
 							if (snapshot.child(elem).val() === joinGroupName) {
 								groupKey = elem;
 							}
-						})
-						ssAppDatabase.ref("/groups/" + groupKey + "/followers/").push(userId);
-						ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
-							if (snapshot.val()) {
-								playerGroups = snapshot.val() + "," + groupKey;
+						});
+
+						// check if the group name exist
+						if (!groupKey) {
+							reject(new Error("group-name-mismatch"));
+						}
+
+						// check if the group is still open
+						ssAppDatabase.ref("/groups/" + groupKey + "/FollowersTest").once("value").then((snap) => {
+							console.log(snap);
+							console.log(snap.val());
+							if (!snap.val()) {
+								ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
+									const notJoined = setPlayerGroups(snapshot, groupKey, userId);
+									notJoined && ssAppDatabase.ref("/groups/" + groupKey + "/followers/").push(userId);
+								});
+								resolve();
 							} else {
-								playerGroups = groupKey;
+								reject(new Error("group-join-unavailable"));
 							}
-							ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
 						})
 					});
 				} else if (!joinGroupName) {
-					let playerGroups, newGroupKey, userId = user.uid;
-					newGroupKey = ssAppDatabase.ref("/groups/").push(true).key;
-					ssAppDatabase.ref("/groups/GroupsOnline/" + newGroupKey).set(groupName);
+					let playerGroups, newGroupKey, groupNameExist = false,
+						userId = user.uid;
+					ssAppDatabase.ref("/groups/GroupsOnline/").once("value").then((snapshot) => {
 
-					ssAppDatabase.ref("/groups/" + newGroupKey + "/followers/").push(userId);
-					ssAppDatabase.ref("/groups/" + newGroupKey + "/groupleader/").set(userId);
-					ssAppDatabase.ref("/groups/" + newGroupKey + "/NameOfGroup/").set(groupName);
-					ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
-						if (snapshot.val()) {
-							playerGroups = snapshot.val() + "," + newGroupKey;
-						} else {
-							playerGroups = newGroupKey;
+						Object.values(snapshot.val()).forEach((elem) => {
+							console.log(elem);
+							groupName === elem && (groupNameExist = true);
+						});
+
+						if (groupNameExist) {
+							reject(new Error("The group name you wish to create has already been taken, please consider another."));
 						}
-						ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
-					});
+
+						newGroupKey = ssAppDatabase.ref("/groups/").push(true).key;
+						ssAppDatabase.ref("/groups/GroupsOnline/" + newGroupKey).set(groupName);
+
+						ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
+							setPlayerGroups(snapshot, newGroupKey, userId);
+							ssAppDatabase.ref("/groups/" + newGroupKey + "/followers/").push(userId);
+							ssAppDatabase.ref("/groups/" + newGroupKey + "/groupleader/").set(userId);
+							ssAppDatabase.ref("/groups/" + newGroupKey + "/NameOfGroup/").set(groupName);
+						});
+						resolve();
+					})
 				}
-			});
+			})
 		}
 
 
 		// sign in with verified email
 		loginBtn.onclick = function(event) {
-			// perhaps instead of using button, an input[type="submit"] might be better
-			// because using submit can trigger onclick event when user press enter
-			const email = $("#loginEmail").val(),
+			const groupName = $('#loginNewGroup').val(),
+				joinGroupName = $('#loginJoinGroup').val(),
+				email = $("#loginEmail").val(),
 				password = $("#loginPassword").val();
 
 			// input validation
 			validateLoginInput(email, password).then(() => {
-
 				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
 					var actionCodeSettings = {
 						url: "https://secret-santa-project.firebaseapp.com/?email=" + ssAppAuth.currentUser.email,
@@ -202,27 +263,31 @@
 							ssAppAuth.signOut();
 						});
 					} else {
-						window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
-						console.log(sessionStorage.getItem('userid'));
-						console.log("User signed in.", user.uid);
-						pageRedirect("group.html");
+						if (!!groupName || !!joinGroupName) {
+							userJoinOrCreateNewGroup(user, groupName, joinGroupName).then(() => {
+								redirectAndStoreUserToSession("group.html", ssAppAuth.currentUser.uid, "User signed in.", user.uid);
+							}).catch((error) => {
+								console.log(error);
+								messageModal(error.message);
+								$('#loginPassword').val("");
+							});
+						} else {
+							redirectAndStoreUserToSession("group.html", ssAppAuth.currentUser.uid, "User signed in.", user.uid);
+						}
 					}
-
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
-					// refresh page with erorr message indicating erorr type
-					// pageRedirect(window.location.href + "#" + error.message);
 					$('#loginPassword').val("");
 				});
 			}).catch((error) => {
-				console.log(error.message);
+				messageModal(error.message);
+				console.log(error);
 				$('#loginPassword').val("");
 			});
 		};
 
-		// register account with email and password
-		// since we check the group input to be non-null before opening the modal
+
 		signupBtn.onclick = function(event) {
 			const groupName = $('#loginNewGroup').val(),
 				joinGroupName = $('#loginJoinGroup').val(),
@@ -244,25 +309,17 @@
 					ssAppAuth.currentUser.sendEmailVerification().then(function() {
 						console.log("Email Verification Sent!");
 						messageModal("email-verification-sent");
-
 						ssAppAuth.onAuthStateChanged(function(user) {
 							console.log(user);
-
 							// check if the user is joining or creating a group
 							if (!!groupName) {
 								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, groupName);
 							} else {
 								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, false, joinGroupName);
 							}
-
 							emailVerificationStateReload().then(function(intervalId) {
-								window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
 								clearInterval(intervalId);
-								// the group.html is a placeholder page, which we can put a "Email Confirmed !!"
-								// later into the project
-								console.log("Email Verified!!");
-								pageRedirect("group.html");
-
+								redirectAndStoreUserToSession("group.html", ssAppAuth.currentUser.uid, "Email Verified!!");
 							}).catch(function(error) {
 								console.log(error.message);
 								window.location.reload();
@@ -272,18 +329,16 @@
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
-
-					// testing, delete user that got created even after exception
-					if (!!ssAppAuth.currentUser) {
-						ssAppAuth.currentUser.delete();
-					}
-
 					$("#registerPassword").val("");
 					$("#registerPasswordConfirm").val("");
+					// // testing, delete user that got created even after exception
+					// if (!!ssAppAuth.currentUser) {
+					// 	ssAppAuth.currentUser.delete();
+					// }
 				})
 			}).catch((error) => {
-				console.log('This is where I caught user info input error');
-				console.log(error.message);
+				messageModal(error.message);
+				console.log(error);
 			});
 		};
 
