@@ -259,7 +259,7 @@
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
 						// alert("Please verified your email before proceed.");
-						messageModal("email-not-verified");
+						messageModal("verify-email");
 						ssAppAuth.currentUser.sendEmailVerification().then(() => {
 							// messageModal("email-verification-sent");
 							$('#loginPassword').val("");
