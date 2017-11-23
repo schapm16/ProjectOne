@@ -112,14 +112,17 @@ $(document).ready(function() {
                 for (var i = 0; i < 10; i++) {
                     var newImg = $("<img>");
                     newImg.attr("src", result.items[i].imageEntities[0].mediumImage);
-                    var Paragraph = $("<p>");
-                    Paragraph.text("Item" + i + ": $" + result.items[i].salePrice);
+                    var Paragraph = $("<p class='truncate'>");
+                    Paragraph.text(result.items[i].name);
+                    var Paragraph2 = $("<p>");
+                    Paragraph2.text("$" + result.items[i].salePrice);
                     var caruItem = $("<a id=img" + i + ">");
                     caruItem.attr("class", 'carousel-item center-align');
                     caruItem.attr("target", "_blank");
                     caruItem.attr("href", result.items[i].productUrl);
                     caruItem.append(newImg);
                     caruItem.append(Paragraph);
+                    caruItem.append(Paragraph2);
                     $("#productDisplay").append(caruItem);
                     $("#img" + i).hammer();
                     $("#img" + i).on("tap", function() {
@@ -156,14 +159,17 @@ $(document).ready(function() {
             for (var i = 0; i < 10; i++) {
                     var newImg = $("<img>");
                     newImg.attr("src", short.item[i].galleryURL[0]);
-                    var Paragraph = $("<p>");
-                    Paragraph.text("Item" + i + ": $" + short.item[i].sellingStatus[0].currentPrice[0].__value__);
+                    var Paragraph = $("<p class='truncate'>");
+                    Paragraph.text(short.item[i].title[0]);
+                    var Paragraph2 = $("<p>");
+                    Paragraph2.text("$" + short.item[i].sellingStatus[0].currentPrice[0].__value__);
                     var caruItem = $("<a id=img" + i + ">");
                     caruItem.attr("class", 'carousel-item center-align');
                     caruItem.attr("target", "_blank");
                     caruItem.attr("href", short.item[i].viewItemURL[0]);
                     caruItem.append(newImg);
                     caruItem.append(Paragraph);
+                    caruItem.append(Paragraph2);
                     $("#productDisplay").append(caruItem);
                     $("#img" + i).hammer();
                     $("#img" + i).on("tap", function() {
