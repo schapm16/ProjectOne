@@ -70,6 +70,18 @@ function messageModal(errorType) {
             $("#messageModal").modal("open");
             break;
 
+        case "groupname-repeated":
+            $("#messageModal h4").text("Oops!");
+            $("#message").text("The group name you wish to create has already been taken, please consider another.");
+            $("#messageModal").modal("open");
+            break;
+
+        case "group-already-joined":
+            $("#messageModal h4").text("Oops!");
+            $("#message").text("Looks like you already joined the group!");
+            $("#messageModal").modal("open");
+            break;
+
         case "group-join-unavailable":
             $("#messageModal h4").text("Oops!");
             $("#message").text("The group you wish to join has already started please find another group to join.");
@@ -112,7 +124,7 @@ $(document).ready(function() {
     // this function will check if the user have filled out the group name
     function groupNameMustBeFilledAndChecked(groupName = false, joinGroupName = false) {
         return new Promise((resolve, reject) => {
-         
+
             // if player doesn't join or create a group
             if (!groupName && !joinGroupName) {
                 // messageModal("create-join-blank");
@@ -138,8 +150,21 @@ $(document).ready(function() {
                         reject(new Error("group-name-mismatch"));
                     }
                 });
-            } else if (!!groupName && !joinGroupName) {
-                resolve();
+            } // before resolving groupName must not exist 
+            else if (!!groupName && !joinGroupName) {
+                ssAppDatabase.ref("/groups/GroupsOnline/").once("value").then((snapshot) => {
+                    let groupNameExist = false;
+                    Object.values(snapshot.val()).forEach((elem) => {
+                        console.log(elem);
+                        groupName === elem && (groupNameExist = true);
+                    });
+
+                    if (groupNameExist) {
+                        reject(new Error("groupname-repeated"));
+                    } else {
+                        resolve();
+                    }
+                });
             }
         });
     }

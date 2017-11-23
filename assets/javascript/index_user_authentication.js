@@ -123,25 +123,26 @@
 
 		// need to be promise
 		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName = false, joinGroupName = false) {
-			ssAppDatabase.ref("/users/" + user.uid)
-				.set({
-					"Name": usrName,
-					"Alias": usrAlias,
-					"uniqueId": user.uid
-				})
-				.then(function() {
-					console.log("User Information Saved:", user.uid);
+			return new Promise((resolve, reject) => {
+				ssAppDatabase.ref("/users/" + user.uid)
+					.set({
+						"Name": usrName,
+						"Alias": usrAlias,
+						"uniqueId": user.uid
+					})
+					.then(function() {
+						console.log("User Information Saved:", user.uid);
+					});
+				ssAppAuth.currentUser.updateProfile({
+					displayName: usrName + " : " + usrAlias,
+				}).then(function() {
+					logPlayerToGroup(user, groupName, joinGroupName).then(() => {
+						resolve();
+					}).catch((error) => {
+						reject(error);
+					})
 				});
-
-			ssAppAuth.currentUser.updateProfile({
-				displayName: usrName + " : " + usrAlias,
-			}).then(function() {
-				logPlayerToGroup(user, groupName, joinGroupName).then(() => {
-					resolve();
-				}).catch((error) => {
-					reject(error);
-				})
-			});
+			})
 		}
 
 		// still have uncaught
@@ -159,7 +160,7 @@
 			})
 		}
 
-		// need more testing 
+		// all errors caught!! 
 		// this is a helper function to reduce repetition	
 		function logPlayerToGroup(user, groupName, joinGroupName) {
 			// helper function check if player already join the group before setting it to group
@@ -168,12 +169,15 @@
 					groupString = snapshot.val();
 				if (!!groupString) {
 					const groupArray = groupString.split(",");
-					groupArray.indexOf(groupKey) !== -1 ? playerGroups = groupString :
-						playerGroups = groupString + "," + groupKey;
-					notJoined = true;
+					if (groupArray.indexOf(groupKey) !== -1) {
+						playerGroups = groupString;
+						return notJoined;
+					}
+					playerGroups = groupString + "," + groupKey;
 				} else {
 					playerGroups = groupKey;
 				}
+				notJoined = true;
 				ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
 				return notJoined;
 			}
@@ -201,8 +205,11 @@
 								ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
 									const notJoined = setPlayerGroups(snapshot, groupKey, userId);
 									notJoined && ssAppDatabase.ref("/groups/" + groupKey + "/followers/").push(userId);
+									messageModal("group-already-joined");
+									setTimeout(() => {
+										resolve();
+									}, 3000);
 								});
-								resolve();
 							} else {
 								reject(new Error("group-join-unavailable"));
 							}
@@ -219,24 +226,23 @@
 						});
 
 						if (groupNameExist) {
-							reject(new Error("The group name you wish to create has already been taken, please consider another."));
+							reject(new Error("groupname-repeated"));
+						} else {
+							newGroupKey = ssAppDatabase.ref("/groups/").push(true).key;
+							ssAppDatabase.ref("/groups/GroupsOnline/" + newGroupKey).set(groupName);
+
+							ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
+								setPlayerGroups(snapshot, newGroupKey, userId);
+								ssAppDatabase.ref("/groups/" + newGroupKey + "/followers/").push(userId);
+								ssAppDatabase.ref("/groups/" + newGroupKey + "/groupleader/").set(userId);
+								ssAppDatabase.ref("/groups/" + newGroupKey + "/NameOfGroup/").set(groupName);
+								resolve();
+							});
 						}
-
-						newGroupKey = ssAppDatabase.ref("/groups/").push(true).key;
-						ssAppDatabase.ref("/groups/GroupsOnline/" + newGroupKey).set(groupName);
-
-						ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
-							setPlayerGroups(snapshot, newGroupKey, userId);
-							ssAppDatabase.ref("/groups/" + newGroupKey + "/followers/").push(userId);
-							ssAppDatabase.ref("/groups/" + newGroupKey + "/groupleader/").set(userId);
-							ssAppDatabase.ref("/groups/" + newGroupKey + "/NameOfGroup/").set(groupName);
-						});
-						resolve();
 					})
 				}
 			})
 		}
-
 
 		// sign in with verified email
 		loginBtn.onclick = function(event) {
@@ -310,19 +316,22 @@
 						console.log("Email Verification Sent!");
 						messageModal("email-verification-sent");
 						ssAppAuth.onAuthStateChanged(function(user) {
+							$("#registerButton").prop("disabled", true); // once registered prevent multiple input bug
 							console.log(user);
-							// check if the user is joining or creating a group
-							if (!!groupName) {
-								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, groupName);
-							} else {
-								pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, false, joinGroupName);
-							}
-							emailVerificationStateReload().then(function(intervalId) {
-								clearInterval(intervalId);
-								redirectAndStoreUserToSession("group.html", ssAppAuth.currentUser.uid, "Email Verified!!");
-							}).catch(function(error) {
-								console.log(error.message);
-								window.location.reload();
+
+							// for precaution, turn one one of the groupname argument to false						
+							pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, groupName, joinGroupName).then(() => {
+								emailVerificationStateReload().then(function(intervalId) {
+									clearInterval(intervalId);
+									redirectAndStoreUserToSession("group.html", ssAppAuth.currentUser.uid, "Email Verified!!");
+								}).catch(function(error) {
+									console.log(error.message);
+									window.location.reload();
+								});
+							}).catch((error) => {
+								console.log(error);
+								messageModal(error.message);
+								$('#loginPassword').val("");
 							});
 						});
 					})
@@ -341,7 +350,6 @@
 				console.log(error);
 			});
 		};
-
 	}(jQuery));
 
 }());
