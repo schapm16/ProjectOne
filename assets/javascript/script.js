@@ -47,9 +47,9 @@ function displayGroup(groupID) {
     //keeps "hide" class until until user is groupleader
     group.append("<a class='waves-effect waves-light btn hide' id='" + groupID + "'><i class='material-icons left'>ac_unit</i>Start</a>");
     group.append("<a class='waves-effect waves-light btn emailbtn hide' id='" + groupID + "email' data-target='emailForm" + groupID + "'><i class='material-icons left'>email</i>Add</a>");
-    form.append("<input id='inviteEmail' type='email' class='validate' style='width:80%'>");
+    form.append("<input id='inviteEmail-" + groupID + "' type='email' class='validate' style='width:80%'>");
     form.append("<label for='inviteEmail'>Email</label>");
-    form.append("<button id='inviteEmailButton' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
+    form.append("<button id='inviteEmailButton-" + groupID + "' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
     group.append("<a class='waves-effect waves-light btn hide' id='goButton" + groupID + "'  data-groupId='" + groupID + "'>Go!</a>");
     $(".s6").append(group);
     $(".s6").append(form);
@@ -80,11 +80,10 @@ $(document).click(function(event) {
 
         const groupId = targetForm.replace(/\bemailForm/, "");
 
-
-        document.querySelector('#inviteEmailButton').onclick = function() {
+        document.querySelector('#inviteEmailButton-' + groupId).onclick = function() {
             const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
                 emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
-                inviteEmail = $('#inviteEmail').val();
+                inviteEmail = $('#inviteEmail-' + groupId).val();
             console.log(url);
             console.log(emailContent);
 
