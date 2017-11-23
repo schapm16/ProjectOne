@@ -120,8 +120,6 @@
 		//now saving the profile data
 		//saving works fine now, if we want to add additional fields to user"s database profile - we can add
 		//new property to the object in .set field
-
-		// need to be promise
 		function pushUserInfoToDatabase(user, usrName, usrAlias, groupName = false, joinGroupName = false) {
 			return new Promise((resolve, reject) => {
 				ssAppDatabase.ref("/users/" + user.uid)
@@ -205,7 +203,7 @@
 								ssAppDatabase.ref("/users/" + userId + "/groups").once("value").then((snapshot) => {
 									const notJoined = setPlayerGroups(snapshot, groupKey, userId);
 									notJoined && ssAppDatabase.ref("/groups/" + groupKey + "/followers/").push(userId);
-									messageModal("group-already-joined");
+									!notJoined && messageModal("group-already-joined");
 									setTimeout(() => {
 										resolve();
 									}, 3000);
