@@ -224,5 +224,5 @@ $(document).ready(function() {
         }
     });
     
-    displayGroupMembers();
+    displayGroupMembers(groupId);
 });

@@ -13,6 +13,11 @@
     
 }
 
+.carousel img{
+    max-height: 200px;
+    width: auto;
+}
+
 #header img {
     box-sizing: content-box;
     
