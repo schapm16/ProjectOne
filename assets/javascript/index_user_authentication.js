@@ -176,7 +176,7 @@
 					playerGroups = groupKey;
 				}
 				notJoined = true;
-				ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
+				ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups.trim());
 				return notJoined;
 			}
 
@@ -186,7 +186,7 @@
 					ssAppDatabase.ref("/groups/GroupsOnline/").once("value").then((snapshot) => {
 						Object.getOwnPropertyNames(snapshot.val()).forEach(function(elem) {
 							if (snapshot.child(elem).val() === joinGroupName) {
-								groupKey = elem;
+								groupKey = elem.trim();
 							}
 						});
 
