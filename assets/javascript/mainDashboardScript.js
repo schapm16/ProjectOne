@@ -40,7 +40,6 @@ function displayGroupMembers (groupId) {
 
 
 $(document).ready(function() {
-    displayGroupMembers();
     
     //Adding user's personal preference
     userID = sessionStorage.getItem('userid');
@@ -224,4 +223,6 @@ $(document).ready(function() {
             ebayAPI(searchTerm);
         }
     });
+    
+    displayGroupMembers();
 });

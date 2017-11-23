@@ -201,7 +201,8 @@
 					console.log(sessionStorage.getItem('userid'));
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
-						alert("Please verified your email before proceed.");
+						console.log("Please verified your email before proceed.");
+						messageModal("verify-email");
 						ssAppAuth.signOut().then(() => {
 							window.location.reload();
 						})

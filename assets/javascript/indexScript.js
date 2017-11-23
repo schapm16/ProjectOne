@@ -69,6 +69,12 @@ function messageModal(errorType) {
             $("#message").text("You forgot your password.");
             $("#messageModal").modal("open");
             break;
+        
+        case "verify-email":
+            $("#messageModal h4").text("Oops!");
+            $("#message").text("You need to verify your email address before continuing.");
+            $("#messageModal").modal("open");
+            break;
 
             //Both Login and Registration Errors
         case "invalid-email":
