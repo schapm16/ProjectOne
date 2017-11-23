@@ -76,6 +76,31 @@ function messageModal(errorType) {
             $("#messageModal").modal("open");
             break;
 
+        case "groupname-repeated":
+            $("#messageModal h4").text("Oops!");
+            $("#message").text("The group name you wish to create has already been taken, please consider another.");
+            $("#messageModal").modal("open");
+            break;
+
+        case "group-already-joined":
+            $("#messageModal h4").text("Oops!");
+            $("#message").text("Looks like you already joined the group!");
+            $("#messageModal").modal("open");
+            break;
+
+        case "group-join-unavailable":
+            $("#messageModal h4").text("Oops!");
+            $("#message").text("The group you wish to join has already started please find another group to join.");
+            $("#messageModal").modal("open");
+            break;
+
+            // Login before verifiying email
+        case "email-not-verified":
+            $("#messageModal h4").text("Oops!");
+            $("#message").text("Email not verified. Please verified your email before proceed.");
+            $("#messageModal").modal("open");
+            break;
+
             //Both Login and Registration Errors
         case "invalid-email":
             $("#messageModal h4").text("Oops!");
@@ -90,7 +115,6 @@ function messageModal(errorType) {
             $("#message").text("Email verification sent to your inbox.");
             $("#messageModal").modal("open");
             break;
-
     }
 }
 
@@ -104,23 +128,21 @@ $(document).ready(function() {
     checkIfThisIsAnInvitation();
 
     // this function will check if the user have filled out the group name
-    // if not stop action
     function groupNameMustBeFilledAndChecked(groupName = false, joinGroupName = false) {
         return new Promise((resolve, reject) => {
+
             // if player doesn't join or create a group
             if (!groupName && !joinGroupName) {
-                messageModal("create-join-blank");
-                throw new Error('Must choose a group to join or create a new one!!');
-
-            }
-            // if player join and create a group
+                // messageModal("create-join-blank");
+                throw new Error("create-join-blank");
+            } // if player join and create a group
             else if (!!groupName && !!joinGroupName) {
-                messageModal("create-join-both");
-                throw new Error('Player can only choose to join a group or create new one.');
+                // messageModal("create-join-both");
+                throw new Error("create-join-both");
             }
 
             // before resolving joinGroupName must exist 
-            else if (!!joinGroupName && !groupName) {
+            if (!!joinGroupName && !groupName) {
                 ssAppDatabase.ref("/groups/GroupsOnline/").once("value").then((snapshot) => {
                     let groupNameExist = false;
                     Object.values(snapshot.val()).forEach((elem) => {
@@ -130,12 +152,25 @@ $(document).ready(function() {
                     if (groupNameExist) {
                         resolve();
                     } else {
-                        reject(new Error('The group name you entered doesn\'t match any existing group'));
-                        messageModal("group-name-mismatch");
+                        // messageModal("group-name-mismatch");
+                        reject(new Error("group-name-mismatch"));
                     }
                 });
-            } else if (!!groupName && !joinGroupName) {
-                resolve();
+            } // before resolving groupName must not exist 
+            else if (!!groupName && !joinGroupName) {
+                ssAppDatabase.ref("/groups/GroupsOnline/").once("value").then((snapshot) => {
+                    let groupNameExist = false;
+                    Object.values(snapshot.val()).forEach((elem) => {
+                        console.log(elem);
+                        groupName === elem && (groupNameExist = true);
+                    });
+
+                    if (groupNameExist) {
+                        reject(new Error("groupname-repeated"));
+                    } else {
+                        resolve();
+                    }
+                });
             }
         });
     }
@@ -153,7 +188,6 @@ $(document).ready(function() {
         return;
     }
 
-
     // exit modal
     $("#acknowledgeButton").click(function() {
         $("#messageModal").modal("close");
@@ -170,7 +204,8 @@ $(document).ready(function() {
         groupNameMustBeFilledAndChecked(createGroupName, joinGroupName).then(() => {
             $("#registerModal").modal("open");
         }).catch((error) => {
-            console.log(error.message);
+            console.log(error);
+            messageModal(error.message);
         })
     });
 
