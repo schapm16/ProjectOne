@@ -260,6 +260,7 @@
 					};
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
+<<<<<<< HEAD
 						// alert("Please verified your email before proceed.");
 						messageModal("email-not-verified");
 						ssAppAuth.currentUser.sendEmailVerification().then(() => {
@@ -280,6 +281,13 @@
 						} else {
 							redirectAndStoreUserToSession("group.html", ssAppAuth.currentUser.uid, "User signed in.", user.uid);
 						}
+=======
+						console.log("Please verified your email before proceed.");
+						messageModal("verify-email");
+						ssAppAuth.signOut().then(() => {
+							window.location.reload();
+						})
+>>>>>>> cbe266680fef3a69827856d97a9711fd83d77432
 					}
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
