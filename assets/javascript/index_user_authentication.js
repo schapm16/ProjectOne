@@ -29,7 +29,7 @@
 					break;
 				case "auth/wrong-password":
 					// alert("The password does not match the sign in address.");
-					messageModal("password-incorrect")
+					messageModal("password-incorrect");
 					break;
 				case "auth/network-request-failed":
 					// alert("Request timeout.");
@@ -70,7 +70,6 @@
 		}
 
 
-
 		// validateRegisterInput caught error in account signin and registeration before pinging firebase
 		// and do something about it
 		function validateLoginInput(email, password) {
@@ -78,17 +77,10 @@
 				if (!(email.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i))) {
 					messageModal("invalid-email");
 					throw new Error("invalid email input");
-				
-
-				// if (password.length < 8 && password.length > 0) {
-				// 	messageModal("password-incorrect");
-				// 	throw new Error("wrong password!!");
-				// 	// reject();
 				} else if (password.length <= 0) {
 					messageModal("password-blank");
 					throw new Error("don't forget to fill your password!!");
 				}
-
 				resolve();
 			});
 		}
@@ -109,7 +101,7 @@
 
 					if (ssAppAuth.currentUser.uid !== userId) {
 						throw new Error("The current user online is unfortunately, not you. The page will reload now.");
-						reject();
+						// reject();
 					}
 
 					if (ssAppAuth.currentUser.emailVerified) {
@@ -180,7 +172,6 @@
 						ssAppDatabase.ref("/users/" + userId + "/groups").set(playerGroups);
 					});
 				}
-				
 			});
 		}
 
@@ -196,27 +187,33 @@
 			validateLoginInput(email, password).then(() => {
 
 				ssAppAuth.signInWithEmailAndPassword(email, password).then(function(user) {
-
-					window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
-					console.log(sessionStorage.getItem('userid'));
+					var actionCodeSettings = {
+						url: "https://secret-santa-project.firebaseapp.com/?email=" + ssAppAuth.currentUser.email,
+						handleCodeInApp: false
+					};
 					// stop user from signing in before verifing their email
 					if (!(user.emailVerified)) {
-						alert("Please verified your email before proceed.");
-						ssAppAuth.signOut().then(() => {
-							window.location.reload();
-						})
+						// alert("Please verified your email before proceed.");
+						messageModal("email-not-verified");
+						ssAppAuth.currentUser.sendEmailVerification().then(() => {
+							// messageModal("email-verification-sent");
+							$('#loginPassword').val("");
+							// window.location.reload();
+							ssAppAuth.signOut();
+						});
+					} else {
+						window.sessionStorage.setItem('userid', ssAppAuth.currentUser.uid);
+						console.log(sessionStorage.getItem('userid'));
+						console.log("User signed in.", user.uid);
+						pageRedirect("group.html");
 					}
 
-					console.log("User signed in.", user.uid);
-					pageRedirect("group.html");
 				}).catch(function(error) {
 					console.log("Error:  " + error.code + " " + error.message);
 					errorHandler(error.code);
-
 					// refresh page with erorr message indicating erorr type
 					// pageRedirect(window.location.href + "#" + error.message);
 					$('#loginPassword').val("");
-
 				});
 			}).catch((error) => {
 				console.log(error.message);

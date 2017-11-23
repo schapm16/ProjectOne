@@ -70,6 +70,13 @@ function messageModal(errorType) {
             $("#messageModal").modal("open");
             break;
 
+            // Login before verifiying email
+        case "email-not-verified":
+            $("#messageModal h4").text("Oops!");
+            $("#message").text("Email not verified. Please verified your email before proceed.");
+            $("#messageModal").modal("open");
+            break;
+
             //Both Login and Registration Errors
         case "invalid-email":
             $("#messageModal h4").text("Oops!");
@@ -84,7 +91,6 @@ function messageModal(errorType) {
             $("#message").text("Email verification sent to your inbox.");
             $("#messageModal").modal("open");
             break;
-
     }
 }
 
