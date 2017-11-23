@@ -25,7 +25,23 @@ function displayPartnerIdeaChip(ideaName){
     $("#partnerGiftIdeas").append(newIdea);
 }
 
+function displayGroupMembers (groupId) {
+    db.ref("groups/" + groupId + "/followers").on("child_added", function(snapshot1) {
+        console.log("Followers:" + snapshot1.val());
+        console.log("TEST: " + snapshot1.val());
+        db.ref("users/")
+        .orderByChild("uniqueId")
+        .equalTo(snapshot1.val())
+        .on("child_added", function(snapshot) {
+            $("#member-list").append($("<li class='collection-item'>").text(snapshot.val().Name));
+        });
+    });
+}
+
+
 $(document).ready(function() {
+    displayGroupMembers();
+    
     //Adding user's personal preference
     userID = sessionStorage.getItem('userid');
     console.log("userID: "+userID);
