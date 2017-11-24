@@ -3,40 +3,61 @@ console.log("main script.js connected")
 var db = firebase.database(ssl);
 
 $(document).ready(function() {
+ $('.modal').modal();
+ $("#mainField").on("click", ".goButton", function() {
+    console.log("knok")
+    window.location.assign("mainDashboard.html");
+});
 
-    $("#mainField").on("click", ".goButton", function() {
-        console.log("knok")
-        window.location.assign("mainDashboard.html");
+ var auth = sessionStorage.getItem("userid");
+ console.log("Session uID:" + auth);
+
+ function initializeGroup(element){
+    displayGroup(element);
+    displayGroupMembers(element);
+    $(document).on("click", "#" + element, function() {
+        shuffleMemberList(element);
+        $("#goButton" + element).removeClass("hide");
     });
+    db.ref("groups/" + element + "/groupleader").once("value", function(snap) {
+        console.log("Groupleader: " + snap.val());
+        if (auth == snap.val()) {
+            $("#" + element).removeClass("hide");
+            $("#" + element + "email").removeClass("hide");
+        }
+    });
+    db.ref("groups/" + element + "/FollowersTest").once('value', function(snap) {
+        if (snap.val() != null) {
+            $("#goButton" + element).removeClass("hide");
+        }
+    });
+}
 
-    var auth = sessionStorage.getItem("userid");
-    console.log("Session uID:" + auth);
-
-    db.ref("users/" + auth + "/groups").on("value", function(snapshot) {
-        console.log("Groups:" + snapshot.val().split(","));
-        snapshot.val().split(",").forEach(function(element) {
-            displayGroup(element);
-            displayGroupMembers(element);
-            $(document).on("click", "#" + element, function() {
-                shuffleMemberList(element);
-                $("#goButton" + element).removeClass("hide");
-            });
-            db.ref("groups/" + element + "/groupleader").once("value", function(snap) {
-                console.log("Groupleader: " + snap.val());
-                if (auth == snap.val()) {
-                    $("#" + element).removeClass("hide");
-                    $("#" + element + "email").removeClass("hide");
-                }
-            });
-            db.ref("groups/" + element + "/FollowersTest").once('value', function(snap) {
-                if (snap.val() != null) {
-                    $("#goButton" + element).removeClass("hide");
-                }
-            });
-        });
+db.ref("users/" + auth + "/groups").once("value", function(snapshot) {
+    console.log("Groups:" + snapshot.val().split(","));
+    snapshot.val().split(",").forEach(function(element) {
+        initializeGroup(element);
     });
 });
 
+$("#createNewGroup").click(function(){
+    var key = db.ref("groups/")
+    .push({
+        NameOfGroup: document.getElementById("nameOfGroup").value,
+        followers: {
+            0: auth,
+        },
+        groupleader: auth
+    }).key;
+    db.ref("users/"+auth+"/groups").once("value", function(snap){
+        db.ref("users/"+auth).update({
+            groups: snap.val()+","+key
+        })
+    });
+    db.ref("groups/GroupsOnline").push(document.getElementById("nameOfGroup").value);
+    initializeGroup(key)
+});
+});
 
 function displayGroup(groupID) {
     var card = $("<div class='card'>");
@@ -75,13 +96,12 @@ function displayGroup(groupID) {
 //         $(document.getElementById(targetForm)).toggleClass("scale-out").toggleClass("scale-in");
 //     }
 // });
+$("#signOut").click(function(){
+    sessionStorage.setItem("userid", "");
+    window.location.assign("index.html");
+});
 
-
-$(document).click(function(event) {
-    $("#signOut").click(function(){
-        sessionStorage.setItem("userid", "");
-        window.location.assign("index.html");
-    });
+$(document).click(function(event) {    
     if ($(event.target).hasClass('emailbtn')) {
         var targetForm = $(event.target).attr("data-target");
         console.log(targetForm);
@@ -124,7 +144,6 @@ function displayGroupMembers(groupId) {
         $("#member-count" + groupID).text("Secret Santas: " + $("#member-list" + groupID + " li").length);
     }
 }
-
 
 function shuffleMemberList(groupName) {
     // Fisher-Yates shuffling algorithm
