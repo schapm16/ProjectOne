@@ -39,10 +39,10 @@ $(document).ready(function() {
 
 
 function displayGroup(groupID) {
-    var group = $("<div class='group-item' id='group-" + groupID + "'>");
+    var group = $("<div class='group-item center' id='group-" + groupID + "'>");
     var form = $("<form class='input-field scale-transition scale-out' id='emailForm" + groupID + "'>");
     group.append($("<h3 class='center'>"));
-    group.append($("<h5>").html(" <span id='member-count" + groupID + "'> </span>"));
+    group.append($("<h5 class='center-align'>").html(" <span id='member-count" + groupID + "'> </span>"));
     group.append($("<ul class='collection' id='member-list" + groupID + "'>"));
     //keeps "hide" class until until user is groupleader
     group.append("<a class='waves-effect waves-light btn hide' id='" + groupID + "'><i class='material-icons left'>ac_unit</i>Start</a>");
@@ -109,7 +109,7 @@ function displayGroupMembers(groupId) {
         .orderByChild("uniqueId")
         .equalTo(snapshot1.val())
         .on("child_added", function(snapshot) {
-            $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
+            $("#member-list" + groupId).append($("<li class='collection-item center-align'>").text(snapshot.val().Name));
         });
         setTimeout(function() {
             updateMemberCount(groupId);
