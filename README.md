@@ -1,5 +1,3 @@
 # ProjectOne
 David Farrenkopf, Vitaliy Vorobyev, Timothy Jeng, and Stephen Chapman
-
-2
-# 2
+URL: https://dfarrenk.github.io/ProjectOne/
