@@ -37,3 +37,16 @@
 .btn:hover, .btn-floating:hover {
     background-color: #12C644;
 }
+
+.input-field input:focus + label {
+    color: #000 !important;
+}
+
+.input-field input:focus {
+    border-bottom: 1px solid #000 !important;
+    box-shadow: none !important;
+}
+
+.input-field {
+    margin-top: 30px;
+}
