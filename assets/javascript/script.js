@@ -4,7 +4,7 @@ var db = firebase.database(ssl);
 
 $(document).ready(function() {
 
-    $(".s6").on("click", ".goButton", function() {
+    $("#mainField").on("click", ".goButton", function() {
         console.log("knok")
         window.location.assign("mainDashboard.html");
     });
@@ -51,9 +51,9 @@ function displayGroup(groupID) {
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton-" + groupID + "' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
     group.append("<a class='waves-effect waves-light btn hide' id='goButton" + groupID + "'  data-groupId='" + groupID + "'>Go!</a>");
-    $(".s6").append(group);
-    $(".s6").append(form);
-    $(".s6").on("click", "#goButton" + groupID, function(event) {
+    $("#mainField").append(group);
+    $("#mainField").append(form);
+    $("#mainField").on("click", "#goButton" + groupID, function(event) {
         console.log("knock");
         sessionStorage.setItem("currentGroupId", $(event.currentTarget).attr("data-groupid"));
         window.location.assign("mainDashboard.html");
@@ -82,8 +82,8 @@ $(document).click(function(event) {
 
         document.querySelector('#inviteEmailButton-' + groupId).onclick = function() {
             const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
-                emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
-                inviteEmail = $('#inviteEmail-' + groupId).val();
+            emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
+            inviteEmail = $('#inviteEmail-' + groupId).val();
             console.log(url);
             console.log(emailContent);
 
@@ -102,11 +102,11 @@ function displayGroupMembers(groupId) {
         console.log("Followers:" + snapshot1.val());
         console.log("TEST: " + snapshot1.val())
         db.ref("users/")
-            .orderByChild("uniqueId")
-            .equalTo(snapshot1.val())
-            .on("child_added", function(snapshot) {
-                $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
-            });
+        .orderByChild("uniqueId")
+        .equalTo(snapshot1.val())
+        .on("child_added", function(snapshot) {
+            $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
+        });
         setTimeout(function() {
             updateMemberCount(groupId);
         }, 500);
@@ -135,7 +135,7 @@ function shuffleMemberList(groupName) {
 
     function shuffle(targetArray) {
         let m = targetArray.length,
-            i;
+        i;
         while (m) {
             i = Math.floor(Math.random() * m--);
             swap(targetArray, i, m);

@@ -50,3 +50,8 @@
 .input-field {
     margin-top: 30px;
 }
+
+#player{
+    max-width: 20px;
+    max-height: 20px;
+}
