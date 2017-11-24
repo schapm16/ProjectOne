@@ -73,6 +73,10 @@ function displayGroup(groupID) {
 
 
 $(document).click(function(event) {
+    $("#signOut").click(function(){
+        sessionStorage.setItem("userid", "");
+        window.location.assign("index.html");
+    });
     if ($(event.target).hasClass('emailbtn')) {
         var targetForm = $(event.target).attr("data-target");
         console.log(targetForm);
