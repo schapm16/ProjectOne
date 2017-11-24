@@ -39,6 +39,8 @@ $(document).ready(function() {
 
 
 function displayGroup(groupID) {
+    var card = $("<div class='card'>");
+    var cardContent = $("<div class='card-content'>");
     var group = $("<div class='group-item center-align' id='group-" + groupID + "'>");
     var form = $("<form class='input-field scale-transition scale-out' id='emailForm" + groupID + "'>");
     group.append($("<h3 >"));
@@ -53,7 +55,9 @@ function displayGroup(groupID) {
     group.append("<a class='waves-effect waves-light btn hide' id='goButton" + groupID + "'  data-groupId='" + groupID + "'>Go!</a>");
     
     group.append(form);
-    $("#mainField").append(group);
+    cardContent.append(group);
+    card.append(cardContent);
+    $("#mainField").append(card);
     $("#mainField").on("click", "#goButton" + groupID, function(event) {
         console.log("knock");
         sessionStorage.setItem("currentGroupId", $(event.currentTarget).attr("data-groupid"));
