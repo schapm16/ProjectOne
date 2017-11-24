@@ -39,10 +39,10 @@ $(document).ready(function() {
 
 
 function displayGroup(groupID) {
-    var group = $("<div class='group-item' id='group-" + groupID + "'>");
+    var group = $("<div class='group-item center-align' id='group-" + groupID + "'>");
     var form = $("<form class='input-field scale-transition scale-out' id='emailForm" + groupID + "'>");
-    group.append($("<h3 class='center'>"));
-    group.append($("<h5>").html(" <span id='member-count" + groupID + "'> </span>"));
+    group.append($("<h3 >"));
+    group.append($("<h5 class='center-align'>").html(" <span id='member-count" + groupID + "'> </span>"));
     group.append($("<ul class='collection' id='member-list" + groupID + "'>"));
     //keeps "hide" class until until user is groupleader
     group.append("<a class='waves-effect waves-light btn hide' id='" + groupID + "'><i class='material-icons left'>ac_unit</i>Start</a>");
@@ -51,8 +51,9 @@ function displayGroup(groupID) {
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton-" + groupID + "' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
     group.append("<a class='waves-effect waves-light btn hide' id='goButton" + groupID + "'  data-groupId='" + groupID + "'>Go!</a>");
+    
+    group.append(form);
     $("#mainField").append(group);
-    $("#mainField").append(form);
     $("#mainField").on("click", "#goButton" + groupID, function(event) {
         console.log("knock");
         sessionStorage.setItem("currentGroupId", $(event.currentTarget).attr("data-groupid"));
@@ -98,9 +99,8 @@ $(document).click(function(event) {
 
 function displayGroupMembers(groupId) {
     db.ref("groups/" + groupId + "/NameOfGroup/").once("value", function(snap) {
-        $("#group-" + groupId + " > h3").text("Group " + snap.val());
+        $("#group-" + groupId + " > h3").text(snap.val());
     });
-    $("#group-" + groupId + " > h3").text("Group " + groupId);
     console.log("start displaying " + groupId)
     db.ref("groups/" + groupId + "/followers").on("child_added", function(snapshot1) {
         console.log("Followers:" + snapshot1.val());
@@ -109,7 +109,7 @@ function displayGroupMembers(groupId) {
         .orderByChild("uniqueId")
         .equalTo(snapshot1.val())
         .on("child_added", function(snapshot) {
-            $("#member-list" + groupId).append($("<li class='collection-item'>").text(snapshot.val().Name));
+            $("#member-list" + groupId).append($("<li class='collection-item center-align'>").text(snapshot.val().Name));
         });
         setTimeout(function() {
             updateMemberCount(groupId);

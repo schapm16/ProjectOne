@@ -23,23 +23,25 @@
         <img src="assets/images/secretSanta.png" alt="Secret Santa Image">
     </div>
     <div class="row">
-        <div class="col s12">
+        <div class="col s9 l9">
             <div class="row valign-wrapper">
-                <h4>
-                    Welcome,
+                <h4 class="center-align">
+                    <span>Welcome,</span>
                     <span class="userName">User's Name</span> !
                     <a id="menuButton" class="dropdown-button btn" data-activates="menu"><i class="material-icons">arrow_drop_down</i></a>
                 </h4>
-
                 <ul id='menu' class='dropdown-content'>
-                    <li><a href="#!" id="signOut">Sign Out</a></li>
+                    <li>
+                        <a href="#!" id="signOut">Sign Out</a>
+                    </li>
                 </ul>
-                <div style="padding: 20px">
-                    <button class="btn-floating btn-large waves-effect waves-light right" id="play-music"><i class="material-icons">play_circle_outline</i></button>
-                    <div id="player" style="visibility:hidden"></div>
-                </div>
-                
             </div>            
+        </div>
+        <div class="col s3 l3">
+            <div style="padding: 20px">
+                <button class="btn-floating btn-large waves-effect waves-light right" id="play-music"><i class="material-icons">play_circle_outline</i></button>
+                <div id="player" style="visibility:hidden"></div>
+            </div>
         </div>
     </div>
     <!-- main field with group list -->
