@@ -27,7 +27,7 @@ $(document).ready(function() {
                 $("#" + element + "email").removeClass("hide");
             }
         });
-        db.ref("groups/" + element + "/FollowersTest").once('value', function(snap) {
+        db.ref("groups/" + element + "/FollowersTest").on('value', function(snap) {
             if (snap.val() != null) {
                 $("#goButton" + element).removeClass("hide");
             }
@@ -43,13 +43,13 @@ $(document).ready(function() {
 
     $("#createNewGroup").click(function() {
         var key = db.ref("groups/")
-            .push({
-                NameOfGroup: document.getElementById("nameOfGroup").value,
-                followers: {
-                    0: auth,
-                },
-                groupleader: auth
-            }).key;
+        .push({
+            NameOfGroup: document.getElementById("nameOfGroup").value,
+            followers: {
+                0: auth,
+            },
+            groupleader: auth
+        }).key;
         db.ref("users/" + auth + "/groups").once("value", function(snap) {
             db.ref("users/" + auth).update({
                 groups: snap.val() + "," + key
@@ -112,8 +112,8 @@ $(document).click(function(event) {
 
         document.querySelector('#inviteEmailButton-' + groupId).onclick = function() {
             const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
-                emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
-                inviteEmail = $('#inviteEmail-' + groupId).val();
+            emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
+            inviteEmail = $('#inviteEmail-' + groupId).val();
             console.log(url);
             console.log(emailContent);
 
@@ -131,11 +131,11 @@ function displayGroupMembers(groupId) {
         console.log("Followers:" + snapshot1.val());
         console.log("TEST: " + snapshot1.val());
         db.ref("users/")
-            .orderByChild("uniqueId")
-            .equalTo(snapshot1.val())
-            .on("child_added", function(snapshot) {
-                $("#member-list" + groupId).append($("<li class='collection-item center-align'>").text(snapshot.val().Name));
-            });
+        .orderByChild("uniqueId")
+        .equalTo(snapshot1.val())
+        .on("child_added", function(snapshot) {
+            $("#member-list" + groupId).append($("<li class='collection-item center-align'>").text(snapshot.val().Name));
+        });
         setTimeout(function() {
             updateMemberCount(groupId);
         }, 500);
@@ -163,7 +163,7 @@ function shuffleMemberList(groupName) {
 
     function shuffle(targetArray) {
         let m = targetArray.length,
-            i;
+        i;
         while (m) {
             i = Math.floor(Math.random() * m--);
             swap(targetArray, i, m);
