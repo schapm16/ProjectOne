@@ -312,12 +312,12 @@
 
 					ssAppAuth.currentUser.sendEmailVerification().then(function() {
 						console.log("Email Verification Sent!");
+						messageModal("email-verification-sent");
 						ssAppAuth.onAuthStateChanged(function(user) {
 							$("#registerButton").prop("disabled", true); // once registered prevent multiple input bug
 							console.log(user);
 							// for precaution, turn one one of the groupname argument to false						
 							pushUserInfoToDatabase(ssAppAuth.currentUser, usrName, usrAlias, groupName, joinGroupName).then(() => {
-								messageModal("email-verification-sent");
 								emailVerificationStateReload().then(function(intervalId) {
 									clearInterval(intervalId);
 									redirectAndStoreUserToSession("group.html", ssAppAuth.currentUser.uid, "Email Verified!!");
@@ -329,7 +329,7 @@
 								console.log(error);
 								messageModal(error.message);
 								$('#loginPassword').val("");
-							})
+							});
 						});
 					})
 				}).catch(function(error) {

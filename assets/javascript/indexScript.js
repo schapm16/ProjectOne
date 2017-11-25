@@ -191,7 +191,8 @@ $(document).ready(function() {
     // exit modal
     $("#acknowledgeButton").click(function() {
         $("#messageModal").modal("close");
-        $("#registerModal input").val("");
+        $("#registerPassword").val("");
+        $("#registerPasswordConfirm").val("");
     });
 
     $("#startRegisterButton").click(function() {
