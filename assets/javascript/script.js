@@ -46,21 +46,60 @@ $(document).ready(function() {
     });
 
     $("#createNewGroup").click(function() {
-        var key = db.ref("groups/")
-        .push({
-            NameOfGroup: document.getElementById("nameOfGroup").value,
-            followers: {
-                0: auth,
-            },
-            groupleader: auth
-        }).key;
-        db.ref("users/" + auth + "/groups").once("value", function(snap) {
-            db.ref("users/" + auth).update({
-                groups: snap.val() + "," + key
-            });
+        db.ref("groups/GroupsOnline").once("value", (snap)=>{
+            var exist = 1;
+            var name = document.getElementById("nameOfGroup").value;
+            for(var prop in snap.val()){
+                if(name === snap.val()[prop]){
+                    $("#nameOfGroup").val("Such group name already exists! Select a new one!")
+                    console.log("exits")
+                    exist=0;
+                    break;
+                }
+            }
+            if(exist){
+                var key = db.ref("groups/")
+                .push({
+                    NameOfGroup: document.getElementById("nameOfGroup").value,
+                    followers: {
+                        0: auth,
+                    },
+                    groupleader: auth
+                }).key;
+                db.ref("users/" + auth + "/groups").once("value", function(snap) {
+                    db.ref("users/" + auth).update({
+                        groups: snap.val() + "," + key
+                    });
+                });
+                db.ref("groups/GroupsOnline").push(document.getElementById("nameOfGroup").value);
+                initializeGroup(key);
+                $('#modal1').modal('close');
+            }
         });
-        db.ref("groups/GroupsOnline").push(document.getElementById("nameOfGroup").value);
-        initializeGroup(key);
+    });
+
+    $("#joinGroup").click(function(){   
+        var name = document.getElementById("nameOfGroupJoin").value;
+        db.ref("groups/GroupsOnline").once("value", (snap)=>{
+            for(var prop in snap.val()){
+                if(name === snap.val()[prop]){
+                    db.ref("groups/"+prop+"/followers").push(auth);
+                    console.log("yes:"+  prop)
+                    db.ref("users/" + auth + "/groups").once("value", function(snap) {
+                        db.ref("users/" + auth).update({
+                            groups: snap.val() + "," + prop
+                        });
+                    }).then(()=>{
+                        console.log("Successfully joined!");
+                        initializeGroup(prop);
+                        $('#modal2').modal('close');
+                    })
+                    break;
+                }
+                $("#nameOfGroupJoin").val("Such group does not exist! Check the name!")
+            } 
+        });
+        
     });
 });
 

@@ -31,20 +31,28 @@
                     <a id="menuButton" class="dropdown-button btn" data-activates="menu"><i class="material-icons">arrow_drop_down</i></a>
                 </h4>
                 <ul id='menu' class='dropdown-content'>
-                    <li>
-                        <a href="#!" id="signOut">Sign Out</a>
-                    </li>
+                    <li><a href="#!" id="signOut">Sign Out</a></li>
+                    <li><a class="modal-trigger" href="#modal1">New group</a></li>
+                    <li><a class="modal-trigger" href="#modal2">Join group</a></li>
                 </ul>
                 <!-- create a new group Trigger -->
             </div>
         </div>
         <div class="col s12 l3">
-            <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Create a new group</a>
+
             <div id="modal1" class="modal">
                 <div class="modal-content">
                     <h4>Create a new group</h4>
                     <input type="text" name="nameOfGroup" placeholder="Name of group" id='nameOfGroup'>
-                    <button class="btn modal-action modal-close" id='createNewGroup'>Submit</button>
+                    <button class="btn" id='createNewGroup'>Submit</button>
+                    <button class="btn modal-action modal-close">Close</button>
+                </div>
+            </div>
+            <div id="modal2" class="modal">
+                <div class="modal-content">
+                    <h4>Join a group</h4>
+                    <input type="text" name="nameOfGroup" placeholder="Name of group" id='nameOfGroupJoin'>
+                    <button class="btn" id='joinGroup'>Submit</button>
                     <button class="btn modal-action modal-close">Close</button>
                 </div>
             </div>
