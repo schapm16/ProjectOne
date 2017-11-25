@@ -1,62 +1,63 @@
-console.log("main script.js connected")
+console.log("main script.js connected");
 
+/*global firebase ssl*/
 var db = firebase.database(ssl);
 
 $(document).ready(function() {
- $('.modal').modal();
- $("#mainField").on("click", ".goButton", function() {
-    console.log("knok")
-    window.location.assign("mainDashboard.html");
-});
-
- var auth = sessionStorage.getItem("userid");
- console.log("Session uID:" + auth);
-
- function initializeGroup(element){
-    displayGroup(element);
-    displayGroupMembers(element);
-    $(document).on("click", "#" + element, function() {
-        shuffleMemberList(element);
-        $("#goButton" + element).removeClass("hide");
+    $('.modal').modal();
+    $("#mainField").on("click", ".goButton", function() {
+        console.log("knok");
+        window.location.assign("mainDashboard.html");
     });
-    db.ref("groups/" + element + "/groupleader").once("value", function(snap) {
-        console.log("Groupleader: " + snap.val());
-        if (auth == snap.val()) {
-            $("#" + element).removeClass("hide");
-            $("#" + element + "email").removeClass("hide");
-        }
-    });
-    db.ref("groups/" + element + "/FollowersTest").once('value', function(snap) {
-        if (snap.val() != null) {
+
+    var auth = sessionStorage.getItem("userid");
+    console.log("Session uID:" + auth);
+
+    function initializeGroup(element) {
+        displayGroup(element);
+        displayGroupMembers(element);
+        $(document).on("click", "#" + element, function() {
+            shuffleMemberList(element);
             $("#goButton" + element).removeClass("hide");
-        }
-    });
-}
+        });
+        db.ref("groups/" + element + "/groupleader").once("value", function(snap) {
+            console.log("Groupleader: " + snap.val());
+            if (auth == snap.val()) {
+                $("#" + element).removeClass("hide");
+                $("#" + element + "email").removeClass("hide");
+            }
+        });
+        db.ref("groups/" + element + "/FollowersTest").once('value', function(snap) {
+            if (snap.val() != null) {
+                $("#goButton" + element).removeClass("hide");
+            }
+        });
+    }
 
-db.ref("users/" + auth + "/groups").once("value", function(snapshot) {
-    console.log("Groups:" + snapshot.val().split(","));
-    snapshot.val().split(",").forEach(function(element) {
-        initializeGroup(element);
+    db.ref("users/" + auth + "/groups").once("value", function(snapshot) {
+        console.log("Groups:" + snapshot.val().split(","));
+        snapshot.val().split(",").forEach(function(element) {
+            initializeGroup(element);
+        });
     });
-});
 
-$("#createNewGroup").click(function(){
-    var key = db.ref("groups/")
-    .push({
-        NameOfGroup: document.getElementById("nameOfGroup").value,
-        followers: {
-            0: auth,
-        },
-        groupleader: auth
-    }).key;
-    db.ref("users/"+auth+"/groups").once("value", function(snap){
-        db.ref("users/"+auth).update({
-            groups: snap.val()+","+key
-        })
+    $("#createNewGroup").click(function() {
+        var key = db.ref("groups/")
+            .push({
+                NameOfGroup: document.getElementById("nameOfGroup").value,
+                followers: {
+                    0: auth,
+                },
+                groupleader: auth
+            }).key;
+        db.ref("users/" + auth + "/groups").once("value", function(snap) {
+            db.ref("users/" + auth).update({
+                groups: snap.val() + "," + key
+            });
+        });
+        db.ref("groups/GroupsOnline").push(document.getElementById("nameOfGroup").value);
+        initializeGroup(key);
     });
-    db.ref("groups/GroupsOnline").push(document.getElementById("nameOfGroup").value);
-    initializeGroup(key)
-});
 });
 
 function displayGroup(groupID) {
@@ -74,7 +75,7 @@ function displayGroup(groupID) {
     form.append("<label for='inviteEmail'>Email</label>");
     form.append("<button id='inviteEmailButton-" + groupID + "' type='button' class='btn-floating btn-large right'><i class='material-icons'>arrow_forward</i></button>");
     group.append("<a class='waves-effect waves-light btn hide' id='goButton" + groupID + "'  data-groupId='" + groupID + "'>Go!</a>");
-    
+
     group.append(form);
     cardContent.append(group);
     card.append(cardContent);
@@ -96,12 +97,12 @@ function displayGroup(groupID) {
 //         $(document.getElementById(targetForm)).toggleClass("scale-out").toggleClass("scale-in");
 //     }
 // });
-$("#signOut").click(function(){
+$("#signOut").click(function() {
     sessionStorage.setItem("userid", "");
     window.location.assign("index.html");
 });
 
-$(document).click(function(event) {    
+$(document).click(function(event) {
     if ($(event.target).hasClass('emailbtn')) {
         var targetForm = $(event.target).attr("data-target");
         console.log(targetForm);
@@ -111,13 +112,13 @@ $(document).click(function(event) {
 
         document.querySelector('#inviteEmailButton-' + groupId).onclick = function() {
             const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
-            emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
-            inviteEmail = $('#inviteEmail-' + groupId).val();
+                emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
+                inviteEmail = $('#inviteEmail-' + groupId).val();
             console.log(url);
             console.log(emailContent);
 
             window.open("mailto:" + inviteEmail + "?subject=" + "Cool Secret Santa Game" + "&body=" + emailContent);
-        }
+        };
     }
 });
 
@@ -125,16 +126,16 @@ function displayGroupMembers(groupId) {
     db.ref("groups/" + groupId + "/NameOfGroup/").once("value", function(snap) {
         $("#group-" + groupId + " > h3").text(snap.val());
     });
-    console.log("start displaying " + groupId)
+    console.log("start displaying " + groupId);
     db.ref("groups/" + groupId + "/followers").on("child_added", function(snapshot1) {
         console.log("Followers:" + snapshot1.val());
-        console.log("TEST: " + snapshot1.val())
+        console.log("TEST: " + snapshot1.val());
         db.ref("users/")
-        .orderByChild("uniqueId")
-        .equalTo(snapshot1.val())
-        .on("child_added", function(snapshot) {
-            $("#member-list" + groupId).append($("<li class='collection-item center-align'>").text(snapshot.val().Name));
-        });
+            .orderByChild("uniqueId")
+            .equalTo(snapshot1.val())
+            .on("child_added", function(snapshot) {
+                $("#member-list" + groupId).append($("<li class='collection-item center-align'>").text(snapshot.val().Name));
+            });
         setTimeout(function() {
             updateMemberCount(groupId);
         }, 500);
@@ -162,7 +163,7 @@ function shuffleMemberList(groupName) {
 
     function shuffle(targetArray) {
         let m = targetArray.length,
-        i;
+            i;
         while (m) {
             i = Math.floor(Math.random() * m--);
             swap(targetArray, i, m);
@@ -180,7 +181,7 @@ function shuffleMemberList(groupName) {
         return object;
     }
 
-    // shuffling 
+    // shuffling
     const ssAppDatabse = firebase.database(ssl);
 
     ssAppDatabse.ref('/groups/' + groupName + '/followers/').once('value').then(function(snapshot) {
