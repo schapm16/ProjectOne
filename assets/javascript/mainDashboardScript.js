@@ -42,15 +42,12 @@ function displayGroupMembers (groupId) {
 function writeNewChatMessage(message) {
     var postData = {
         name: userName,
-        message: message
+        message: message,
+        time: moment().format('LLLL')
     };
-    // Get a key for a new Post.
-    var updates = {};
-    updates['/chat/' + chatCounter] = postData;
-    db.ref().update(updates)
-    db.ref('chat/').update({
-        messageCounter: ++chatCounter
-    });
+    //1 push info to the database
+    db.ref("/groups/" + groupId + "/chat/").push(postData);
+    $("#message").val("");
     return 1;
 }
 
@@ -60,6 +57,15 @@ $(document).ready(function() {
     userID = sessionStorage.getItem('userid');
     console.log("userID: "+userID);
     userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID);
+
+    //chat
+    $("#sendToChat").click(()=>{
+        writeNewChatMessage($("#message").val());
+    })
+
+    db.ref("/groups/" + groupId + "/chat").on("child_added", (snap)=>{
+        $("#chat").append(snap.val().name + ": " + snap.val().message + "&#13;");
+    })
 
     //get partner's id
     db.ref("/groups/" + groupId + "/FollowersTest/" + userID)
