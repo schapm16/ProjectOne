@@ -13,6 +13,10 @@ $(document).ready(function() {
     var auth = sessionStorage.getItem("userid");
     console.log("Session uID:" + auth);
 
+    db.ref("/users/"+ auth).once("value", function(snap){
+        $(".userName").text(snap.val().Name);
+    });
+
     function initializeGroup(element) {
         displayGroup(element);
         displayGroupMembers(element);
