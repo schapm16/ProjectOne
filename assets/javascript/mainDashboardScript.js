@@ -1,6 +1,7 @@
 /*global firebase $*/
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
 var userID = 1;
+var userName = null;
 var partnerID = false;
 var groupId = window.sessionStorage.getItem('currentGroupId');
 var userItemsInDB = 0;
@@ -38,6 +39,20 @@ function displayGroupMembers (groupId) {
     });
 }
 
+function writeNewChatMessage(message) {
+    var postData = {
+        name: userName,
+        message: message
+    };
+    // Get a key for a new Post.
+    var updates = {};
+    updates['/chat/' + chatCounter] = postData;
+    db.ref().update(updates)
+    db.ref('chat/').update({
+        messageCounter: ++chatCounter
+    });
+    return 1;
+}
 
 $(document).ready(function() {
 
@@ -67,7 +82,8 @@ $(document).ready(function() {
 
     //display username
     db.ref("/users/"+ userID).once("value", function(snap){
-        $(".userName").text(snap.val().Name);
+        userName = snap.val().Name;
+        $(".userName").text(userName);
     });
     //display user's gift ideas
     userItemsInDB.on('child_added', function(snap) {
