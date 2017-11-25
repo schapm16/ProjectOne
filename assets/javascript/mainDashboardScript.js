@@ -40,7 +40,7 @@ function displayGroupMembers (groupId) {
 
 
 $(document).ready(function() {
-    
+
     //Adding user's personal preference
     userID = sessionStorage.getItem('userid');
     console.log("userID: "+userID);
@@ -56,12 +56,12 @@ $(document).ready(function() {
 
         //display partner name
         db.ref("/users/"+ partnerID).once("value", function(snap){
-        $(".partner").text(snap.val().Name);
+            $(".partner").text(snap.val().Name);
         });
 
         partnerItemsInDB.on('child_added', function(snap) {
-        console.log(snap.key);
-        displayPartnerIdeaChip(snap.key);
+            console.log(snap.key);
+            displayPartnerIdeaChip(snap.key);
         });
     });
 
@@ -109,6 +109,14 @@ $(document).ready(function() {
                 },
             }).done(function(result) {
                 console.log(result);
+                try{
+                    result.items[0];
+                }
+                catch(err){
+                    console.log(err)
+                    $("#productDisplay").html("<h3>No goods found</h3>");
+                    return 1;
+                } 
                 for (var i = 0; i < 10; i++) {
                     var newImg = $("<img>");
                     newImg.attr("src", result.items[i].imageEntities[0].mediumImage);
@@ -153,30 +161,39 @@ $(document).ready(function() {
             
         }).done(function(result) {
             console.log(result);
-            
+
             var short = result.findItemsByKeywordsResponse[0].searchResult[0];
-            
-            for (var i = 0; i < 10; i++) {
-                    var newImg = $("<img>");
-                    newImg.attr("src", short.item[i].galleryURL[0]);
-                    var Paragraph = $("<p class='truncate'>");
-                    Paragraph.text(short.item[i].title[0]);
-                    var Paragraph2 = $("<p>");
-                    Paragraph2.text("$" + short.item[i].sellingStatus[0].currentPrice[0].__value__);
-                    var caruItem = $("<a id=img" + i + ">");
-                    caruItem.attr("class", 'carousel-item center-align');
-                    caruItem.attr("target", "_blank");
-                    caruItem.attr("href", short.item[i].viewItemURL[0]);
-                    caruItem.append(newImg);
-                    caruItem.append(Paragraph);
-                    caruItem.append(Paragraph2);
-                    $("#productDisplay").append(caruItem);
-                    $("#img" + i).hammer();
-                    $("#img" + i).on("tap", function() {
-                        window.open($(this).attr("href"), '_blank');
-                    });
+            try{
+                short.item[0];
+            }
+            catch(err){
+                if(err) { 
+                    console.log(err)
+                    $("#productDisplay").html("<h3>No goods found</h3>");
+                    return 1;
                 }
-                $('.carousel').carousel();
+            } 
+            for (var i = 0; i < 10; i++) {
+                var newImg = $("<img>");
+                newImg.attr("src", short.item[i].galleryURL[0]);
+                var Paragraph = $("<p class='truncate'>");
+                Paragraph.text(short.item[i].title[0]);
+                var Paragraph2 = $("<p>");
+                Paragraph2.text("$" + short.item[i].sellingStatus[0].currentPrice[0].__value__);
+                var caruItem = $("<a id=img" + i + ">");
+                caruItem.attr("class", 'carousel-item center-align');
+                caruItem.attr("target", "_blank");
+                caruItem.attr("href", short.item[i].viewItemURL[0]);
+                caruItem.append(newImg);
+                caruItem.append(Paragraph);
+                caruItem.append(Paragraph2);
+                $("#productDisplay").append(caruItem);
+                $("#img" + i).hammer();
+                $("#img" + i).on("tap", function() {
+                    window.open($(this).attr("href"), '_blank');
+                });
+            }
+            $('.carousel').carousel();
         });
     }
 
@@ -192,12 +209,12 @@ $(document).ready(function() {
         walmartAPI(searchTerm);
     }
 });
-   
+
     $("#signOut").click(function(){
         sessionStorage.setItem("userid", "");
         window.location.assign("index.html");
     });
-     $("#switchGroup").click(function(){
+    $("#switchGroup").click(function(){
         window.location.assign("group.html");
     });
 
