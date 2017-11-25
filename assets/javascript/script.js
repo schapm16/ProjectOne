@@ -61,7 +61,7 @@ $(document).ready(function() {
 });
 
 function displayGroup(groupID) {
-    var card = $("<div class='card'>");
+    var card = $("<div class='card' style='position:absolute'>");
     var cardContent = $("<div class='card-content'>");
     var group = $("<div class='group-item center-align' id='group-" + groupID + "'>");
     var form = $("<form class='input-field scale-transition scale-out' id='emailForm" + groupID + "'>");
