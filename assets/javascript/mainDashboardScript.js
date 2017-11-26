@@ -43,7 +43,8 @@ function writeNewChatMessage(message) {
     var postData = {
         name: userName,
         message: message,
-        time: moment().format('LLLL')
+        time: moment().format('LT'),
+        date: moment().format('L')
     };
     //1 push info to the database
     db.ref("/groups/" + groupId + "/chat/").push(postData);
@@ -64,7 +65,7 @@ $(document).ready(function() {
     })
 
     db.ref("/groups/" + groupId + "/chat").on("child_added", (snap)=>{
-        $("#chat").append(snap.val().name + ": " + snap.val().message + "&#13;");
+        $("#chat").prepend(snap.val().time +" "+ snap.val().name + ": " + snap.val().message + "&#13;");
     })
 
     //get partner's id
