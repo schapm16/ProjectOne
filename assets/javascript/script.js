@@ -177,7 +177,7 @@ function displayGroupMembers(groupId) {
         .orderByChild("uniqueId")
         .equalTo(snapshot1.val())
         .on("child_added", function(snapshot) {
-            $("#member-list" + groupId).append($("<li class='collection-item center-align'>").text(snapshot.val().Name));
+            $("#member-list" + groupId).append($("<li class='collection-item center-align'>").text(snapshot.val().Alias));
         });
         setTimeout(function() {
             updateMemberCount(groupId);
