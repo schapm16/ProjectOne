@@ -71,7 +71,7 @@ $(document).ready(function() {
                         groups: snap.val() + "," + key
                     });
                 });
-                db.ref("groups/GroupsOnline").push(document.getElementById("nameOfGroup").value);
+                db.ref("groups/GroupsOnline/" + key).set(document.getElementById("nameOfGroup").value);
                 initializeGroup(key);
                 $('#modal1').modal('close');
             }
