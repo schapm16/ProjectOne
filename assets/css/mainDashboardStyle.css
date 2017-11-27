@@ -13,7 +13,6 @@
     
 }
 
-
 #header img {
     box-sizing: content-box;
     
@@ -42,7 +41,6 @@
 }
 
 
-
 /*Card - General*/
 .card {
     border-radius: 20px;
@@ -66,8 +64,8 @@
 }
 
 #giftIdea:focus {
-     border-bottom: 1px solid black;
-     box-shadow: none ;
+ border-bottom: 1px solid black;
+ box-shadow: none ;
 }
 
 /*Partner Gift Idea Card*/
@@ -102,4 +100,3 @@
     max-height: 200px;
     width: auto;
 }
-

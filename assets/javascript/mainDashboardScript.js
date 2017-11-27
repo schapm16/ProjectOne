@@ -1,6 +1,7 @@
 /*global firebase $*/
 // TODO only for testing, we have to replace this variables by userID after we will get authentication done
 var userID = 1;
+var userName = null;
 var partnerID = false;
 var groupId = window.sessionStorage.getItem('currentGroupId');
 var userItemsInDB = 0;
@@ -38,6 +39,18 @@ function displayGroupMembers (groupId) {
     });
 }
 
+function writeNewChatMessage(message) {
+    var postData = {
+        name: userName,
+        message: message,
+        time: moment().format('LT'),
+        date: moment().format('L')
+    };
+    //1 push info to the database
+    db.ref("/groups/" + groupId + "/chat/").push(postData);
+    $("#message").val("");
+    return 1;
+}
 
 $(document).ready(function() {
 
@@ -45,6 +58,15 @@ $(document).ready(function() {
     userID = sessionStorage.getItem('userid');
     console.log("userID: "+userID);
     userItemsInDB = db.ref("/groups/" + groupId + "/giftideas/" + userID);
+
+    //chat
+    $("#sendToChat").click(()=>{
+        writeNewChatMessage($("#message").val());
+    })
+
+    db.ref("/groups/" + groupId + "/chat").on("child_added", (snap)=>{
+        $("#chat").prepend(snap.val().time +" "+ snap.val().name + ": " + snap.val().message + "&#13;");
+    })
 
     //get partner's id
     db.ref("/groups/" + groupId + "/FollowersTest/" + userID)
@@ -67,7 +89,8 @@ $(document).ready(function() {
 
     //display username
     db.ref("/users/"+ userID).once("value", function(snap){
-        $(".userName").text(snap.val().Name);
+        userName = snap.val().Name;
+        $(".userName").text(userName);
     });
     //display user's gift ideas
     userItemsInDB.on('child_added', function(snap) {
