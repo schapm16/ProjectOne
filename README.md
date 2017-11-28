@@ -7,4 +7,4 @@ Deployed project:
 
 Presentation: [Click me!](https://docs.google.com/presentation/d/1RTqqF10MVjlsBXy4v9AkannOV_H5NMK8VE23BcaznVk/edit#slide=id.g289541dff0_0_27 "Link to presentation")
 
-![Screenshot](screenshot/index.png?raw=true "Optional Title")
+![Screenshot](screenshot/index.png?)
