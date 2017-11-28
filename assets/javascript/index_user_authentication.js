@@ -113,7 +113,7 @@
 				setTimeout((function() {
 					clearInterval(reloadInterval);
 					reject(new Error("No response after 5 min..."));
-				}), 300000)
+				}), 300000);
 			})
 		}
 
