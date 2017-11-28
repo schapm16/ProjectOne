@@ -154,7 +154,7 @@ $(document).click(function(event) {
         const groupId = targetForm.replace(/\bemailForm/, "");
 
         document.querySelector('#inviteEmailButton-' + groupId).onclick = function() {
-            const url = 'https://dfarrenk.github.io/ProjectOne/index.html#' + groupId,
+            const url = 'https://schapm16.github.io/ProjectOne/index.html#' + groupId,
             emailContent = "Hi,%0D%0A%0D%0APlease join us on Secret Santa for a game of fun and mystery!!%0D%0A%0D%0Aclick on the link below to join us:%0D%0A" + url + "%0D%0A%0D%0Acheers!!",
             inviteEmail = $('#inviteEmail-' + groupId).val();
             console.log(url);
